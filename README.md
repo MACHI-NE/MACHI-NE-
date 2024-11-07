@@ -1,3 +1,26 @@
+# OPTIONAL BUT PREFERABLE CONVENTIONS [FOR THIS PROJECT]
+## Branch Naming
+- `[Branch Type]/[Branch Name]`
+- **Branch types**: Setup, Feature, Docs, Fix
+- **Branch names**: Please name your branches to be concise but descriptive of what the project is doing
+- **Example**: `feature/map-rendering`
+## Branching
+- Limit branches to resolve one issue, if possible
+  - That way merge conflicts will be easier
+  - It's probably not good to have 10000 lines of code changed in a single pull request
+- If your branch does not have an issue, try to create one to link (if applicable, stuff like setup probably doesn't need it)
+## Pull Requests
+- Be descriptive of what the PR does, mentioning issues created/tackles/resolved
+- Use [keywords](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/using-keywords-in-issues-and-pull-requests) to close issues
+- Reviewing's kind of weird with non-Enterprise so I think we can just leave it
+## Commits
+- IDK just do them
+# Issues
+- Add labels where applicable
+- Assign yourself to issues you're tackling
+- Create branches off of issues if possible
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<hr><hr><hr><hr><hr><hr><hr><hr><hr><hr>hi<hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr>
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
