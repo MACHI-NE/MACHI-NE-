@@ -16,6 +16,27 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+@layer components {
+  .form-input {
+    @apply inline-block w-full px-3 py-1.5 text-base text-slate-700 placeholder-slate-600 transition duration-150 ease-in-out bg-slate-300 border border-transparent rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300 sm:text-sm sm:leading-5;
+  }
+  .form-label{
+    @apply inline-block my-1;
+  }
+
+  .form-field {
+    @apply inline-block w-full my-1;
+  }
+  .close-btn{
+    @apply bg-slate-300 border-0 absolute top-2 right-2 p-1 hover:bg-slate-400 rounded-full
+  }
+  .submit-btn{
+    @apply bg-slate-500 text-white px-4 py-2 rounded-md hover:bg-slate-600
+  }
+}
+
+/*defaults below*/
 a {
   font-weight: 500;
   color: #646cff;
