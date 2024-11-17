@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { X } from "lucide-react"; // Import X icon from lucide-react
-
 interface ReportFormProps {
     onClose: () => void;
 }
 
-export default function ReportForm({ onClose }: ReportFormProps) {
+export function ReportForm({ onClose }: ReportFormProps) {
     const [formData, setFormData] = useState({
         location: "",
         type: "",
         time: "",
         description: "",
+        witnessName: "",
+        witnessContact: "",
         customType: "",
         image: null as File | null
     });
@@ -30,7 +31,7 @@ export default function ReportForm({ onClose }: ReportFormProps) {
     };
 
     return (
-        <div className="w-2/3 h-4/5 bg-slate-200 text-slate-800 relative">
+        <div className="w-full md:w-2/3 h-4/5 bg-slate-200 text-slate-800 relative rounded-xl">
             <button
                 onClick={onClose}
                 className="close-btn"
@@ -39,11 +40,11 @@ export default function ReportForm({ onClose }: ReportFormProps) {
                 <X size={24} />
             </button>
 
-            <h1 className="text-xl text-center font-bold pt-9">Create a new report</h1>
+            <h1 className="text-xl text-center font-bold pt-6">Create a new report</h1>
             <form onSubmit={handleSubmit} className="flex flex-col h-[calc(100%-4rem)]">
-                <div className="flex p-6 flex-1 min-h-0">
+                <div className="flex p-6 pt-3 flex-1 min-h-0">
                     <div className="w-1/2 pe-3 flex flex-col">
-                        <div className="space-y-4">
+                        <div className="space-y-1">
                             <div className="form-field">
                                 <label htmlFor="location" className="form-label">Location: </label>
                                 <br />
@@ -61,33 +62,37 @@ export default function ReportForm({ onClose }: ReportFormProps) {
                             <div className="form-field">
                                 <label htmlFor="type" className="form-label">Type: </label>
                                 <br />
-                                <select
-                                    id="type"
-                                    name="type"
-                                    className="form-input"
-                                    onChange={handleChange}
-                                    value={formData.type}
-                                    aria-label="Select incident type"
-                                    required
-                                >
-                                    <option value="">Select a type</option>
-                                    <option value="Car crash">Car crash</option>
-                                    <option value="Shooting/stabbing">Shooting/stabbing</option>
-                                    <option value="Power outage">Power outage</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                                {formData.type === 'Other' && (
-                                    <input
-                                        id="customType"
-                                        type="text"
-                                        name="customType"
-                                        placeholder="Enter emergency type"
-                                        className="form-input mt-2"
+                                <div className="flex gap-3">
+                                    <select
+                                        id="type"
+                                        name="type"
+                                        className={`${formData.type === "Other" ? "w-2/5" : ""} form-input`}
                                         onChange={handleChange}
-                                        value={formData.customType}
+                                        value={formData.type}
+                                        aria-label="Select incident type"
                                         required
-                                    />
-                                )}
+                                    >
+                                        <option value="" disabled>Select a type</option>
+                                        <option value="Medical">Medical Emergency</option>
+                                        <option value="Traffic">Traffic/Vehicle Incident</option>
+                                        <option value="Crime">Crime/Violence</option>
+                                        <option value="Fire">Fire</option>
+                                        <option value="Natural">Natural Disaster</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    {formData.type === 'Other' && (
+                                        <input
+                                            id="customType"
+                                            type="text"
+                                            name="customType"
+                                            placeholder="Enter emergency type"
+                                            className="form-input"
+                                            onChange={handleChange}
+                                            value={formData.customType}
+                                            required
+                                        />
+                                    )}
+                                </div>
                             </div>
                             <div className="form-field">
                                 <label htmlFor="time" className="form-label">Time: </label>
@@ -103,7 +108,37 @@ export default function ReportForm({ onClose }: ReportFormProps) {
                                 />
                             </div>
                         </div>
-                        <div className="form-field flex-1 flex flex-col mt-4 min-h-0">
+                        <div className="flex gap-3">
+                            <div className="form-field">
+                                <label htmlFor="witnessName" className="form-label">Witness Name: </label>
+                                <br />
+                                <input
+                                    id="witnessName"
+                                    type="text"
+                                    name="witnessName"
+                                    placeholder="Enter name"
+                                    className="form-input"
+                                    onChange={handleChange}
+                                    value={formData.witnessName}
+                                    required
+                                />
+                            </div>
+                            <div className="form-field">
+                                <label htmlFor="witnessContact" className="form-label">Contact Info: </label>
+                                <br />
+                                <input
+                                    id="witnessContact"
+                                    type="text"
+                                    name="witnessContact"
+                                    placeholder="Phone or email"
+                                    className="form-input"
+                                    onChange={handleChange}
+                                    value={formData.witnessContact}
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div className="form-field flex-1 flex flex-col mt-1 min-h-0">
                             <label htmlFor="description" className="form-label">Description: </label>
                             <textarea
                                 id="description"
@@ -117,7 +152,7 @@ export default function ReportForm({ onClose }: ReportFormProps) {
                         </div>
                     </div>
                     <div className="w-1/2 ps-3 flex flex-col">
-                        <div className={`form-field ${!formData.image ? "my-auto":"flex-1 flex flex-col min-h-0"}`}>
+                        <div className={`form-field ${!formData.image ? "my-auto" : "flex-1 flex flex-col min-h-0"}`}>
                             <label htmlFor="image" className="form-label">Upload Image:</label>
                             <input
                                 type="file"
@@ -147,8 +182,7 @@ export default function ReportForm({ onClose }: ReportFormProps) {
                         </div>
                     </div>
                 </div>
-                {/* Submit button */}
-                <div className="px-6 pb-6 mx-auto">
+                <div className="px-6 pb-3 mx-auto">
                     <button
                         type="submit"
                         className="submit-btn"

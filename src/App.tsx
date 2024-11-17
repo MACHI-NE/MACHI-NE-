@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ReportForm from "./components/ReportForm";
+import { ReportForm } from "./components/ReportForm/index.tsx";
 
 export default function App() {
   const [showForm, setShowForm] = useState(false);

@@ -1,0 +1,27 @@
+.formWrapper {
+    @apply w-full md:w-2/3 h-4/5 bg-slate-200 text-slate-800 relative rounded-xl;
+}
+
+.formContainer {
+    @apply flex flex-col h-[calc(100%-4rem)];
+}
+
+.formContent {
+    @apply flex p-6 pt-3 flex-1 min-h-0;
+}
+
+.formColumn {
+    @apply w-1/2 flex flex-col;
+}
+
+.formColumnLeft {
+    @apply pe-3;
+}
+
+.formColumnRight {
+    @apply ps-3;
+}
+
+.submitContainer {
+    @apply px-6 pb-3 mx-auto;
+}
