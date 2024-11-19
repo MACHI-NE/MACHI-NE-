@@ -67,31 +67,32 @@ export function ReportForm({ onClose }: ReportFormProps) {
                                 required
                             />
 
-                            <div className="form-field">
-                                <div className="flex gap-3">
-                                    <FormInput
-                                        id="type"
-                                        name="type"
-                                        type="select"
-                                        label="Type:"
-                                        value={formData.type}
-                                        onChange={handleChange}
-                                        options={incidentTypes}
-                                        required
-                                    />
-                                    {formData.type === 'Other' && (
+                            <div className="flex gap-3 form-field">
+                                <FormInput
+                                    id="type"
+                                    name="type"
+                                    type="select"
+                                    label="Type:"
+                                    value={formData.type}
+                                    onChange={handleChange}
+                                    options={incidentTypes}
+                                    required
+                                    containerClassName={formData.type === 'Other' ? 'w-2/5' : ''}
+                                />
+                                {formData.type === 'Other' && (
+                                    <div className="mt-auto">
                                         <input
                                             id="customType"
                                             type="text"
                                             name="customType"
                                             placeholder="Enter emergency type"
-                                            className="form-input"
+                                            className="form-input  form-field flex-grow"
                                             onChange={handleChange}
                                             value={formData.customType}
                                             required
                                         />
-                                    )}
-                                </div>
+                                    </div>
+                                )}
                             </div>
 
                             <FormInput
