@@ -57,17 +57,29 @@ export function ReportForm({ onClose }: ReportFormProps) {
                 <div className={styles.formContent}>
                     <div className={`${styles.formColumn} ${styles.formColumnLeft}`}>
                         <div className="space-y-1">
-                            <FormInput
-                                id="location"
-                                name="location"
-                                label="Location:"
-                                placeholder="Enter location"
-                                value={formData.location}
-                                onChange={handleChange}
-                                required
-                            />
+                            <div className="flex gap-3">
+                                <FormInput
+                                    id="location"
+                                    name="location"
+                                    label="Location:"
+                                    placeholder="Enter location"
+                                    value={formData.location}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                <FormInput
+                                    id="coordinates"
+                                    name="coordinates"
+                                    type="map"
+                                    label="Map:"
+                                    placeholder="Enter location"
+                                    value={formData.location}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
 
-                            <div className="flex gap-3 form-field">
+                            <div className="flex gap-3">
                                 <FormInput
                                     id="type"
                                     name="type"
@@ -80,13 +92,13 @@ export function ReportForm({ onClose }: ReportFormProps) {
                                     containerClassName={formData.type === 'Other' ? 'w-2/5' : ''}
                                 />
                                 {formData.type === 'Other' && (
-                                    <div className="mt-auto">
+                                    <div className="mt-auto flex-1">
                                         <input
                                             id="customType"
                                             type="text"
                                             name="customType"
                                             placeholder="Enter emergency type"
-                                            className="form-input  form-field flex-grow"
+                                            className="form-input form-field flex-grow"
                                             onChange={handleChange}
                                             value={formData.customType}
                                             required

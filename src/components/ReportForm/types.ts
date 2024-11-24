@@ -12,3 +12,8 @@ export interface ReportFormData {
 export interface ReportFormProps {
     onClose: () => void;
 }
+
+export interface Coordinates {
+    lat: number;
+    lng: number;
+}
