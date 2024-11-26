@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import styles from './styles.module.css';
-import { FormInput } from './components/FormInput';
+import { FormInput, resetLocation } from './components/FormInput';
 import { ImageUpload } from './components/ImageUpload';
 import type { ReportFormProps, ReportFormData } from './types';
 
+// Define incident types for the dropdown
 const incidentTypes = [
-    { value: "", label: "Select a type" },
+    { value: "", label: "Select a type", disabled: true },
     { value: "Medical", label: "Medical Emergency" },
     { value: "Traffic", label: "Traffic/Vehicle Incident" },
     { value: "Crime", label: "Crime/Violence" },
@@ -16,6 +17,7 @@ const incidentTypes = [
 ];
 
 export function ReportForm({ onClose }: ReportFormProps) {
+    // State to manage form data
     const [formData, setFormData] = useState<ReportFormData>({
         location: "",
         type: "",
@@ -24,9 +26,15 @@ export function ReportForm({ onClose }: ReportFormProps) {
         witnessName: "",
         witnessContact: "",
         customType: "",
-        image: null
+        image: null,
+        coordinates: null
     });
+    // State to manage reset counter for map
+    const [resetCounter, setResetCounter] = useState(0);
+    // State to manage animation for closing the form
+    const [isAnimatingOut, setIsAnimatingOut] = useState(false);
 
+    // Handle input changes
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -35,124 +43,184 @@ export function ReportForm({ onClose }: ReportFormProps) {
         }));
     };
 
+    // Handle form submission
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         console.log(formData);
         onClose();
     };
 
+    // Handle coordinate changes from the map
+    const handleCoordinateChange = (coords: { lat: number; lng: number }) => {
+        setFormData(prev => ({
+            ...prev,
+            coordinates: coords
+        }));
+    };
+
+    // Handle form close with animation
+    const handleClose = () => {
+        setIsAnimatingOut(true);
+        resetLocation();
+        setResetCounter(prev => prev + 1);
+        setTimeout(() => {
+            onClose();
+            setIsAnimatingOut(false);
+        }, 190);
+    };
+
     return (
-        <div className={styles.formWrapper}>
-            <button
-                onClick={onClose}
-                className="close-btn"
-                aria-label="Close form"
-            >
-                <X size={24} />
-            </button>
+        // Form container with backdrop
+        <div 
+            className={`fixed inset-0 flex items-center justify-center bg-slate-600 bg-opacity-50 backdrop-blur-sm ${
+                isAnimatingOut ? 'animate-fade-out' : 'animate-fade-in'
+            }`}
+            onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                    handleClose();
+                }
+            }}
+        >
+            <div className={styles.formWrapper}>
+                {/* Close button */}
+                <button
+                    onClick={handleClose}
+                    className="close-btn"
+                    aria-label="Close form"
+                >
+                    <X size={24} />
+                </button>
 
-            <h1 className="text-xl text-center font-bold pt-6">Create a new report</h1>
+                {/* Form title */}
+                <h1 className="text-xl text-center font-bold pt-6">Create a new report</h1>
 
-            <form onSubmit={handleSubmit} className={styles.formContainer}>
-                <div className={styles.formContent}>
-                    <div className={`${styles.formColumn} ${styles.formColumnLeft}`}>
-                        <div className="space-y-1">
-                            <FormInput
-                                id="location"
-                                name="location"
-                                label="Location:"
-                                placeholder="Enter location"
-                                value={formData.location}
-                                onChange={handleChange}
-                                required
-                            />
+                {/* Form element */}
+                <form onSubmit={handleSubmit} className={styles.formContainer}>
+                    <div className={styles.formContent}>
+                        <div className={`${styles.formColumn} ${styles.formColumnLeft}`}>
+                            <div className="space-y-1">
+                                <div className="flex gap-3">
+                                    {/* Location input */}
+                                    <FormInput
+                                        id="location"
+                                        name="location"
+                                        label="Location:"
+                                        placeholder="Enter location"
+                                        value={formData.location}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    {/* Map input */}
+                                    <FormInput
+                                        id="coordinates"
+                                        name="coordinates"
+                                        type="map"
+                                        label="Map:"
+                                        placeholder="Enter location"
+                                        value={formData.coordinates ? `${formData.coordinates.lat.toFixed(6)}, ${formData.coordinates.lng.toFixed(6)}` : ''}
+                                        onChange={handleChange}
+                                        onCoordinateChange={handleCoordinateChange}
+                                        required
+                                        resetTrigger={resetCounter}
+                                    />
+                                </div>
 
-                            <div className="flex gap-3 form-field">
+                                <div className="flex gap-3">
+                                    {/* Incident type input */}
+                                    <FormInput
+                                        id="type"
+                                        name="type"
+                                        type="select"
+                                        label="Type:"
+                                        value={formData.type}
+                                        onChange={handleChange}
+                                        options={incidentTypes}
+                                        required
+                                        containerClassName={formData.type === 'Other' ? 'w-2/5' : ''}
+                                    />
+                                    {/* Custom type input, for when Other is selected */}
+                                    {formData.type === 'Other' && (
+                                        <div className="mt-auto flex-1">
+                                            <input
+                                                id="customType"
+                                                type="text"
+                                                name="customType"
+                                                placeholder="Enter emergency type"
+                                                className="form-input form-field flex-grow"
+                                                onChange={handleChange}
+                                                value={formData.customType}
+                                                required
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Time input */}
                                 <FormInput
-                                    id="type"
-                                    name="type"
-                                    type="select"
-                                    label="Type:"
-                                    value={formData.type}
+                                    id="time"
+                                    name="time"
+                                    type="datetime-local"
+                                    label="Time:"
+                                    value={formData.time}
                                     onChange={handleChange}
-                                    options={incidentTypes}
                                     required
-                                    containerClassName={formData.type === 'Other' ? 'w-2/5' : ''}
                                 />
-                                {formData.type === 'Other' && (
-                                    <div className="mt-auto">
-                                        <input
-                                            id="customType"
-                                            type="text"
-                                            name="customType"
-                                            placeholder="Enter emergency type"
-                                            className="form-input  form-field flex-grow"
-                                            onChange={handleChange}
-                                            value={formData.customType}
-                                            required
-                                        />
-                                    </div>
-                                )}
                             </div>
 
+                            <div className="flex gap-3">
+                                {/* Witness name input */}
+                                <FormInput
+                                    id="witnessName"
+                                    name="witnessName"
+                                    label="Witness Name:"
+                                    placeholder="Enter name"
+                                    value={formData.witnessName}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                {/* Witness contact input */}
+                                <FormInput
+                                    id="witnessContact"
+                                    name="witnessContact"
+                                    label="Contact Info:"
+                                    placeholder="Phone or email"
+                                    value={formData.witnessContact}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+
+                            {/* Description input */}
                             <FormInput
-                                id="time"
-                                name="time"
-                                type="datetime-local"
-                                label="Time:"
-                                value={formData.time}
+                                id="description"
+                                name="description"
+                                label="Description:"
+                                placeholder="Enter description"
+                                value={formData.description}
                                 onChange={handleChange}
                                 required
+                                isTextArea
+                                containerClassName="flex-1 flex flex-col min-h-0"
                             />
                         </div>
 
-                        <div className="flex gap-3">
-                            <FormInput
-                                id="witnessName"
-                                name="witnessName"
-                                label="Witness Name:"
-                                placeholder="Enter name"
-                                value={formData.witnessName}
-                                onChange={handleChange}
-                                required
-                            />
-                            <FormInput
-                                id="witnessContact"
-                                name="witnessContact"
-                                label="Contact Info:"
-                                placeholder="Phone or email"
-                                value={formData.witnessContact}
-                                onChange={handleChange}
-                                required
-                            />
+                        <div className={`${styles.formColumn} ${styles.formColumnRight}`}>
+                            {/* Image upload component */}
+                            <ImageUpload formData={formData} setFormData={setFormData} />
                         </div>
-
-                        <FormInput
-                            id="description"
-                            name="description"
-                            label="Description:"
-                            placeholder="Enter description"
-                            value={formData.description}
-                            onChange={handleChange}
-                            required
-                            isTextArea
-                            containerClassName="flex-1 flex flex-col min-h-0"
-                        />
                     </div>
-
-                    <div className={`${styles.formColumn} ${styles.formColumnRight}`}>
-                        <ImageUpload formData={formData} setFormData={setFormData} />
+                    <div className={styles.submitContainer}>
+                        {/* Submit button */}
+                        <button
+                            type="submit"
+                            className="submit-btn"
+                            onSubmit={handleSubmit}
+                        >
+                            Submit Report
+                        </button>
                     </div>
-                </div>
-                <div className={styles.submitContainer}>
-                    <button
-                        type="submit"
-                        className="submit-btn"
-                    >
-                        Submit Report
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     );
 }
