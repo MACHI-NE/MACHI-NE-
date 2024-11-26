@@ -22,11 +22,11 @@
     @apply inline-block w-full px-3 py-1.5 text-base text-slate-700 placeholder-slate-600 transition duration-150 ease-in-out bg-slate-300 border border-transparent rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300 sm:text-sm sm:leading-5;
   }
   input.form-input, button.form-input, select.form-input {
-    @apply h-9; 
+    @apply sm:h-9 sm:text-base h-8 text-xs;
   }
 
   .form-label {
-    @apply inline-block mb-2;
+    @apply inline-block mb-2 text-base sm:text-sm;
   }
 
   .form-field {
@@ -36,7 +36,7 @@
     @apply bg-slate-300 border-0 absolute top-2 right-2 p-1 hover:bg-slate-400 rounded-full;
   }
   .submit-btn {
-    @apply bg-slate-500 text-white px-4 py-2 rounded-md hover:bg-slate-600;
+    @apply bg-slate-500 text-white px-4 py-2 rounded-md hover:bg-slate-600 text-base sm:text-sm;
   }
 
   .map-modal {
@@ -46,7 +46,7 @@
     @apply bg-white p-6 rounded-lg relative w-11/12 max-w-3xl h-4/5;
   }
   .coordinate-display {
-    @apply text-xs leading-[0];
+    @apply text-sm sm:text-xs leading-[0];
   }
 }
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import styles from './styles.module.css';
 import { FormInput, resetLocation } from './components/FormInput';
-import { ImageUpload } from './components/ImageUpload';
+import { ImageUpload } from './components/FormImageUpload';
 import type { ReportFormProps, ReportFormData } from './types';
 
 // Define incident types for the dropdown
@@ -99,7 +99,7 @@ export function ReportForm({ onClose }: ReportFormProps) {
                     <div className={styles.formContent}>
                         <div className={`${styles.formColumn} ${styles.formColumnLeft}`}>
                             <div className="space-y-1">
-                                <div className="flex gap-3">
+                                <div className="flex gap-3 m">
                                     {/* Location input */}
                                     <FormInput
                                         id="location"

@@ -10,7 +10,7 @@ interface ImageUploadProps {
 // Component for handling image upload and preview functionality
 export const ImageUpload: React.FC<ImageUploadProps> = ({ formData, setFormData }) => (
     // Container div with conditional classes based on whether an image is uploaded
-    <div className={`form-field ${!formData.image ? "my-auto" : "flex-1 flex flex-col min-h-0"}`}>
+    <div className={`form-field ${!formData.image ? "md:my-auto" : "flex-1 flex flex-col min-h-0"}`}>
         {/* Label for the file input */}
         <label htmlFor="image" className="form-label">Upload Image:</label>
         

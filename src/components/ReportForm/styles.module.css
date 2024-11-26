@@ -1,27 +1,27 @@
 .formWrapper {
-    @apply w-full md:w-2/3 h-4/5 bg-slate-200 text-slate-800 relative rounded-xl;
+    @apply bg-slate-200 text-slate-800 rounded-lg shadow-xl relative w-11/12 max-w-5xl h-[90vh] flex flex-col animate-fade-in overflow-hidden;
 }
 
 .formContainer {
-    @apply flex flex-col h-[calc(100%-4rem)];
+    @apply flex flex-col overflow-y-auto flex-1;
 }
 
 .formContent {
-    @apply flex p-6 pt-3 flex-1 min-h-0;
+    @apply grid md:grid-cols-5 grid-cols-1 gap-4 p-4;
 }
 
 .formColumn {
-    @apply w-1/2 flex flex-col;
+    @apply flex flex-col gap-4;
 }
 
 .formColumnLeft {
-    @apply pe-3;
+    @apply md:col-span-3 order-1;
 }
 
 .formColumnRight {
-    @apply ps-3;
+    @apply md:col-span-2 order-2 min-h-[16rem] md:min-h-0;
 }
 
 .submitContainer {
-    @apply px-6 pb-3 mx-auto;
+    @apply flex justify-center p-4 border-t border-gray-200;
 }
