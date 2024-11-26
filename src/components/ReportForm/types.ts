@@ -7,13 +7,10 @@ export interface ReportFormData {
     witnessContact: string;
     customType: string;
     image: File | null;
+    coordinates?: { lat: number; lng: number } | null;
 }
 
 export interface ReportFormProps {
     onClose: () => void;
 }
 
-export interface Coordinates {
-    lat: number;
-    lng: number;
-}
