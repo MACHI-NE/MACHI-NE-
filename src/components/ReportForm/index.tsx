@@ -175,7 +175,7 @@ export function ReportForm({ onClose }: ReportFormProps) {
                                         placeholder="Enter name"
                                         value={formData.witnessName}
                                         onChange={handleChange}
-                                        required
+                                        
                                     />
                                     {/* Witness contact input */}
                                     <FormInput
@@ -185,7 +185,7 @@ export function ReportForm({ onClose }: ReportFormProps) {
                                         placeholder="Phone or email"
                                         value={formData.witnessContact}
                                         onChange={handleChange}
-                                        required
+                                        
                                     />
                                 </div>
                             </div>

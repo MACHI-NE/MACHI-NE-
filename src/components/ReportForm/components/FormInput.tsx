@@ -193,7 +193,15 @@ export function FormInput({
                     />
                 )
                 :
-                <>
+                <div className="relative">
+                    <input
+                        type="text"
+                        tabIndex={-1}
+                        className="sr-only absolute inset-0 w-full h-full"
+                        required={required}
+                        value={savedLocation ? 'valid' : ''}
+                        aria-hidden="true"
+                    />
                     <button
                         id={id}
                         type="button"
@@ -203,8 +211,9 @@ export function FormInput({
                     >
                         <p>{savedLocation ? `${savedLocation!.lat.toFixed(6)}, ${savedLocation!.lng.toFixed(6)}` : 'Select Location'}</p>
                     </button>
+
                     {(showMap || isAnimatingOut) && <MapModal />}
-                </>
+                </div>
             }
         </div>
     );
