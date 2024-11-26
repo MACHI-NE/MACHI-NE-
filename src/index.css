@@ -21,12 +21,12 @@
   .form-input {
     @apply inline-block w-full px-3 py-1.5 text-base text-slate-700 placeholder-slate-600 transition duration-150 ease-in-out bg-slate-300 border border-transparent rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300 sm:text-sm sm:leading-5;
   }
-  input.form-input, button.form-input, select.form-input {
-    @apply sm:h-9 sm:text-base h-8 text-xs;
+  input.form-input, button.form-input, select.form-input, textarea.form-input{
+    @apply sm:text-base text-xs;
   }
 
   .form-label {
-    @apply inline-block mb-2 text-base sm:text-sm;
+    @apply inline-block mb-2 text-base sm:text-sm font-semibold;
   }
 
   .form-field {
@@ -44,9 +44,6 @@
   }
   .map-container {
     @apply bg-white p-6 rounded-lg relative w-11/12 max-w-3xl h-4/5;
-  }
-  .coordinate-display {
-    @apply text-sm sm:text-xs leading-[0];
   }
 }
 

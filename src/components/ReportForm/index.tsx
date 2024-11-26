@@ -71,10 +71,9 @@ export function ReportForm({ onClose }: ReportFormProps) {
 
     return (
         // Form container with backdrop
-        <div 
-            className={`fixed inset-0 flex items-center justify-center bg-slate-600 bg-opacity-50 backdrop-blur-sm ${
-                isAnimatingOut ? 'animate-fade-out' : 'animate-fade-in'
-            }`}
+        <div
+            className={`fixed inset-0 flex items-center justify-center bg-slate-600 bg-opacity-50 backdrop-blur-sm ${isAnimatingOut ? 'animate-fade-out' : 'animate-fade-in'
+                }`}
             onClick={(e) => {
                 if (e.target === e.currentTarget) {
                     handleClose();
@@ -92,14 +91,14 @@ export function ReportForm({ onClose }: ReportFormProps) {
                 </button>
 
                 {/* Form title */}
-                <h1 className="text-xl text-center font-bold pt-6">Create a new report</h1>
+                <h1 className="text-xl text-center font-bold md:pt-6 p-3">Create a new report</h1>
 
                 {/* Form element */}
                 <form onSubmit={handleSubmit} className={styles.formContainer}>
                     <div className={styles.formContent}>
                         <div className={`${styles.formColumn} ${styles.formColumnLeft}`}>
-                            <div className="space-y-1">
-                                <div className="flex gap-3 m">
+                            <div className="flex flex-col shrink-0">
+                                <div className="flex gap-3">
                                     {/* Location input */}
                                     <FormInput
                                         id="location"
@@ -108,6 +107,7 @@ export function ReportForm({ onClose }: ReportFormProps) {
                                         placeholder="Enter location"
                                         value={formData.location}
                                         onChange={handleChange}
+                                        containerClassName="w-2/5"
                                         required
                                     />
                                     {/* Map input */}
@@ -122,6 +122,7 @@ export function ReportForm({ onClose }: ReportFormProps) {
                                         onCoordinateChange={handleCoordinateChange}
                                         required
                                         resetTrigger={resetCounter}
+                                        containerClassName="w-3/5"
                                     />
                                 </div>
 
@@ -165,31 +166,30 @@ export function ReportForm({ onClose }: ReportFormProps) {
                                     onChange={handleChange}
                                     required
                                 />
+                                <div className="flex gap-3">
+                                    {/* Witness name input */}
+                                    <FormInput
+                                        id="witnessName"
+                                        name="witnessName"
+                                        label="Witness Name:"
+                                        placeholder="Enter name"
+                                        value={formData.witnessName}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    {/* Witness contact input */}
+                                    <FormInput
+                                        id="witnessContact"
+                                        name="witnessContact"
+                                        label="Contact Info:"
+                                        placeholder="Phone or email"
+                                        value={formData.witnessContact}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
                             </div>
-
-                            <div className="flex gap-3">
-                                {/* Witness name input */}
-                                <FormInput
-                                    id="witnessName"
-                                    name="witnessName"
-                                    label="Witness Name:"
-                                    placeholder="Enter name"
-                                    value={formData.witnessName}
-                                    onChange={handleChange}
-                                    required
-                                />
-                                {/* Witness contact input */}
-                                <FormInput
-                                    id="witnessContact"
-                                    name="witnessContact"
-                                    label="Contact Info:"
-                                    placeholder="Phone or email"
-                                    value={formData.witnessContact}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-
+                            
                             {/* Description input */}
                             <FormInput
                                 id="description"
@@ -200,7 +200,7 @@ export function ReportForm({ onClose }: ReportFormProps) {
                                 onChange={handleChange}
                                 required
                                 isTextArea
-                                containerClassName="flex-1 flex flex-col min-h-0"
+                                containerClassName="flex-1 md:min-h-0 flex flex-col"
                             />
                         </div>
 

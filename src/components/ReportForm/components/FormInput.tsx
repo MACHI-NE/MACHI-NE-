@@ -201,7 +201,7 @@ export function FormInput({
                         className={inputClasses}
                         onClick={() => setShowMap(true)}
                     >
-                        <p className={savedLocation ? "coordinate-display" : "md:text-base text-sm"}>{savedLocation ? `${savedLocation!.lat.toFixed(6)}, ${savedLocation!.lng.toFixed(6)}` : 'Select Location'}</p>
+                        <p>{savedLocation ? `${savedLocation!.lat.toFixed(6)}, ${savedLocation!.lng.toFixed(6)}` : 'Select Location'}</p>
                     </button>
                     {(showMap || isAnimatingOut) && <MapModal />}
                 </>
