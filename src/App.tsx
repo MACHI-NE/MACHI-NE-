@@ -1,7 +1,15 @@
+import { useState } from "react";
+import { ReportForm } from "./components/ReportForm/index.tsx";
+
 export default function App() {
+  const [showForm, setShowForm] = useState(false);
+
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-  )
+    <div>
+      <button onClick={() => setShowForm(!showForm)}>
+        {showForm ? "Hide Report Form" : "View Report Form"}
+      </button>
+      {showForm && <ReportForm onClose={() => setShowForm(false)} />}
+    </div>
+  );
 }
