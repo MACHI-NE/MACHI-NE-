@@ -1,51 +1,42 @@
-
 import MainMap from "./components/Map"
-// import React from "react";
-// import { Routes, Route } from "react-router-dom";
-// import Register from "./register";
-// import Login from "./login";
-
-// const App: React.FC = () => {
-//     return (
-//         <Routes>
-//             <Route path="/" element={<Login />} />
-//             <Route path="register" element={<Register />} />
-//             <Route path="login" element={<Login />} />
-//         </Routes>
-//     );
-// };
-
-// export default App;
-
 import { useState } from "react";
 import { ReportForm } from "./components/ReportForm/index.tsx";
 import { ReportFormData } from "./types.ts";
-
+import { EmergencyModal } from "./components/EmergencyModal";
 
 export default function App() {
   const [showForm, setShowForm] = useState(false);
+  const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
 
   return (
-      <div>
-      <MainMap eventReportList={testingList}
-      setVisiblePoints={
-        (lis) => {
+    <div>
+      <MainMap 
+        eventReportList={testingList}
+        setVisiblePoints={(lis) => {
           console.clear()
           console.log(lis, ",")
-        }
-
-      }
-      selectedPoint={testing}
+        }}
+        selectedPoint={testing}
+        onReportSelect={setSelectedReport}
       />
 
-      <button className="z-10 fixed left-20 top-10 bg-slate-500 p-3" onClick={() => setShowForm(!showForm)}>
-        {showForm ? "Hide Report Form" : "View Report Form"}
-      </button>
+      <div className="button-wrapper">
+        <button className="report-button"
+          onClick={() => setShowForm(!showForm)}>
+          {showForm ? "Hide Report Form" : "View Report Form"}
+        </button>
+      </div>
+      
       {showForm && <ReportForm onClose={() => setShowForm(false)} />}
+      {selectedReport && (
+        <EmergencyModal
+          report={selectedReport}
+          onClose={() => setSelectedReport(null)}
+        />
+      )}
     </div>
   );
 }
-
 
 const testingList: ReportFormData[] = [
   {

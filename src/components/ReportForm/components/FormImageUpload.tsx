@@ -38,7 +38,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ formData, setFormData 
         {formData.image && (
             <div className="flex-1 mt-3 min-h-0">
                 <img
-                    src={URL.createObjectURL(formData.image)} // Create temporary URL for image preview
+                    src={formData.image instanceof File ? URL.createObjectURL(formData.image) : ''} // Create temporary URL for image preview
                     alt="Preview"
                     className="w-full h-full object-contain"
                 />

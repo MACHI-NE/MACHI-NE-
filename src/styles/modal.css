@@ -8,11 +8,10 @@
     }
 
     .modal-backdrop {
-        @apply fixed inset-0 flex items-center justify-center bg-slate-600 bg-opacity-50 backdrop-blur-sm z-50;
+        @apply fixed inset-0 flex items-center justify-center bg-slate-600 bg-opacity-50 backdrop-blur-sm isolate z-[300];
     }
-
     .modal-container {
-        @apply bg-slate-200 text-slate-800 rounded-lg shadow-xl relative w-11/12 max-w-5xl h-[90vh] flex flex-col overflow-hidden;
+        @apply bg-slate-200 text-slate-800 rounded-lg shadow-xl relative w-11/12 max-w-5xl h-[90vh] flex flex-col overflow-hidden z-10;
     }
     
     .modal-container-map {
@@ -100,5 +99,13 @@
 
     .map-container {
         @apply bg-white p-6 rounded-lg relative w-11/12 max-w-3xl h-4/5;
+    }
+
+    .button-wrapper {
+        @apply fixed left-0 top-0 w-full h-full pointer-events-none z-[200];
+    }
+
+    .report-button {
+        @apply left-20 top-10 bg-slate-500 p-3 pointer-events-auto absolute hover:bg-slate-600;
     }
 }

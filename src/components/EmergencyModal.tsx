@@ -28,7 +28,9 @@ export function EmergencyModal({ report, onClose }: EmergencyModalProps) {
     };
 
     return (
-        <div className={`modal-backdrop ${isAnimatingOut ? 'animate-fade-out' : 'animate-fade-in'}`}
+        <div className={`modal-backdrop ${
+            isAnimatingOut ? 'animate-fade-out' : 'animate-fade-in'
+        }`}
             onClick={(e) => e.target === e.currentTarget && handleClose()}
         >
             <div className="modal-container">
