@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { ReportFormData } from '../types';
-import { EmergencyModal } from './EmergencyModal';
 
 const greenIcon = L.icon({
   iconUrl: 'src/components/greenMarker.svg',

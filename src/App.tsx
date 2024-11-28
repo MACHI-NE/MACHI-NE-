@@ -11,7 +11,7 @@ export default function App() {
   return (
     <div>
       <MainMap 
-        eventReportList={testingList}
+        eventReportList={localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList}
         setVisiblePoints={(lis) => {
           console.clear()
           console.log(lis, ",")
