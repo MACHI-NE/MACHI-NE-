@@ -1,6 +1,10 @@
 import MainMap from "./components/Map"
 import { useState } from "react";
 import { ReportForm } from "./components/ReportForm/index.tsx";
+import { ReportFormData } from "./types.ts";
+
+
+
 
 
 export default function App() {
@@ -8,28 +12,15 @@ export default function App() {
 
   return (
       <div>
-      <MainMap eventReportList={
-        [
-        {
-          description: "Community Cleanup Event",
-          date: new Date("2024-11-28"),
-          location: [49.2827, -123.1207],
-        },
-        {
-          description: "Local Farmers Market",
-          date: new Date("2024-12-01"),
-          location: [49.2632, -123.830],
-        }
-      ]}
+      <MainMap eventReportList={testingList}
       setVisiblePoints={
         (lis) => {
           console.clear()
-          lis.forEach((a)=>{
-            console.log(a.description)})
+          console.log(lis, ",")
         }
 
       }
-
+      selectedPoint={testing}
       />
     </div>
   )
@@ -41,3 +32,97 @@ export default function App() {
   //   </div>
   // );
 }
+
+
+const testingList: ReportFormData[] = [
+  {
+    location: "Downtown Vancouver",
+    type: "Community Event",
+    time: "10:00 AM",
+    description: "Community Cleanup Event",
+    witnessName: "John Doe",
+    witnessContact: "john.doe@example.com",
+    customType: "",
+    image: null,
+    coordinates: [49.2827, -123.1207],
+  },
+  {
+    location: "Kitsilano Beach Park",
+    type: "Market",
+    time: "9:00 AM",
+    description: "Local Farmers Market",
+    witnessName: "Jane Smith",
+    witnessContact: "jane.smith@example.com",
+    customType: "",
+    image: null,
+    coordinates: [49.2632, -123.0830],
+  },
+  // New Fraser Valley Entries
+  {
+    location: "Abbotsford Exhibition Park",
+    type: "Sports Event",
+    time: "2:00 PM",
+    description: "Youth Soccer Tournament",
+    witnessName: "Chris Johnson",
+    witnessContact: "chris.johnson@example.com",
+    customType: "",
+    image: null,
+    coordinates: [49.0504, -122.2853],
+  },
+  {
+    location: "Chilliwack Corn Maze",
+    type: "Festival",
+    time: "1:00 PM",
+    description: "Harvest Festival",
+    witnessName: "Ella Brown",
+    witnessContact: "ella.brown@example.com",
+    customType: "",
+    image: null,
+    coordinates: [49.1579, -121.9572],
+  },
+  {
+    location: "Harrison Hot Springs",
+    type: "Recreational Event",
+    time: "11:00 AM",
+    description: "Lake Cleanup Initiative",
+    witnessName: "Mike Davis",
+    witnessContact: "mike.davis@example.com",
+    customType: "",
+    image: null,
+    coordinates: [49.3008, -121.7851],
+  },
+  {
+    location: "Mission Raceway Park",
+    type: "Motorsport Event",
+    time: "3:00 PM",
+    description: "Drag Racing Championship",
+    witnessName: "Sandra Lee",
+    witnessContact: "sandra.lee@example.com",
+    customType: "",
+    image: null,
+    coordinates: [49.1239, -122.3025],
+  },
+  {
+    location: "Langley Event Centre",
+    type: "Community Gathering",
+    time: "5:00 PM",
+    description: "Charity Dinner",
+    witnessName: "Olivia Martin",
+    witnessContact: "olivia.martin@example.com",
+    customType: "",
+    image: null,
+    coordinates: [49.1013, -122.6578],
+  },
+];
+
+const testing: ReportFormData = {
+    location: "Downtown Vancouver",
+    type: "Community Event",
+    time: "10:00 AM",
+    description: "Community Cleanup Event",
+    witnessName: "John Doe",
+    witnessContact: "john.doe@example.com",
+    customType: "",
+    image: null,
+    coordinates: [49.2827, -123.1207],
+  }

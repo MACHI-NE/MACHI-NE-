@@ -7,7 +7,7 @@ export interface ReportFormData {
     witnessContact: string;
     customType: string;
     image: File | null;
-    coordinates?: [number, number] | null;
+    coordinates: [number, number] | null;
 }
 
 export interface ReportFormProps {
