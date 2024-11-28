@@ -30,7 +30,7 @@ export default function App() {
       {showForm && <ReportForm onClose={() => setShowForm(false)} />}
       {selectedReport && (
         <EmergencyModal
-          report={selectedReport}
+          report={JSON.parse(localStorage.getItem('reports') || '[]')[0] || selectedReport}
           onClose={() => setSelectedReport(null)}
         />
       )}
@@ -47,7 +47,7 @@ const testingList: ReportFormData[] = [
     witnessName: "John Doe",
     witnessContact: "john.doe@example.com",
     customType: "",
-    image: new File([""], "image.png", { type: "image/png" }),
+    image: "https://example.com/image.png", // Changed from File to URL string
     coordinates: [49.2827, -123.1207],
     status: 'OPEN'
   },

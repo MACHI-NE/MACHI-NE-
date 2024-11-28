@@ -134,9 +134,12 @@ export function EmergencyModal({ report, onClose }: EmergencyModalProps) {
                                     <hr className="border-slate-300" />
                                     <div className="h-full flex items-center justify-center">
                                         <img
-                                            src={typeof report.image === 'string' ? report.image : URL.createObjectURL(report.image)}
+                                            src={report.image}
                                             alt="Report image"
                                             className="max-w-full max-h-full object-contain"
+                                            onError={(e) => {
+                                                e.currentTarget.style.display = 'none';
+                                            }}
                                         />
                                     </div>
                                 </div>
