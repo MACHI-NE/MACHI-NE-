@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import styles from './styles.module.css';
 import { FormInput, resetLocation } from './components/FormInput';
 import { ImageUpload } from './components/FormImageUpload';
 import type { ReportFormProps, ReportFormData } from '../../types';
+import { addReport } from '../../store/reportStore';
 
 // Define incident types for the dropdown
 const incidentTypes = [
@@ -27,7 +27,8 @@ export function ReportForm({ onClose }: ReportFormProps) {
         witnessContact: "",
         customType: "",
         image: null,
-        coordinates: null
+        coordinates: null,
+        status: 'OPEN'
     });
     // State to manage reset counter for map
     const [resetCounter, setResetCounter] = useState(0);
@@ -46,7 +47,17 @@ export function ReportForm({ onClose }: ReportFormProps) {
     // Handle form submission
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(formData);
+        
+        // Create a copy of form data for storage
+        const storageData = {...formData};
+        
+        // Convert File to URL if image exists
+        if (formData.image instanceof File) {
+            storageData.image = URL.createObjectURL(formData.image);
+        }
+        
+        // Add report to store instead of just localStorage
+        addReport(storageData);
         onClose();
     };
 
@@ -70,33 +81,24 @@ export function ReportForm({ onClose }: ReportFormProps) {
     };
 
     return (
-        // Form container with backdrop
-        <div
-            className={`fixed inset-0 flex items-center justify-center bg-slate-600 bg-opacity-50 backdrop-blur-sm ${isAnimatingOut ? 'animate-fade-out' : 'animate-fade-in'
-                }`}
+        <div className={`modal-backdrop ${isAnimatingOut ? 'animate-fade-out' : 'animate-fade-in'}`}
             onClick={(e) => {
                 if (e.target === e.currentTarget) {
                     handleClose();
                 }
             }}
         >
-            <div className={styles.formWrapper}>
-                {/* Close button */}
-                <button
-                    onClick={handleClose}
-                    className="close-btn"
-                    aria-label="Close form"
-                >
+            <div className="modal-container">
+                <button onClick={handleClose} className="close-btn" aria-label="Close form">
                     <X size={24} />
                 </button>
 
-                {/* Form title */}
-                <h1 className="text-xl text-center font-bold md:pt-6 p-3">Create a new report</h1>
-
-                {/* Form element */}
-                <form onSubmit={handleSubmit} className={styles.formContainer}>
-                    <div className={styles.formContent}>
-                        <div className={`${styles.formColumn} ${styles.formColumnLeft}`}>
+                <h1 className="modal-header">Create a New Report</h1>
+                <hr className="modal-divider"/>
+                
+                <form onSubmit={handleSubmit} className="modal-content">
+                    <div className="formContent">
+                        <div className="formColumn formColumnLeft">
                             <div className="flex flex-col shrink-0">
                                 <div className="flex gap-3">
                                     {/* Location input */}
@@ -204,12 +206,12 @@ export function ReportForm({ onClose }: ReportFormProps) {
                             />
                         </div>
 
-                        <div className={`${styles.formColumn} ${styles.formColumnRight}`}>
+                        <div className="formColumn formColumnRight">
                             {/* Image upload component */}
                             <ImageUpload formData={formData} setFormData={setFormData} />
                         </div>
                     </div>
-                    <div className={styles.submitContainer}>
+                    <div className="submitContainer">
                         {/* Submit button */}
                         <button
                             type="submit"

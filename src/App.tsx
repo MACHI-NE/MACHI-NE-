@@ -22,15 +22,13 @@ export default function App() {
       }
       selectedPoint={testing}
       />
+
+      <button className="z-10 fixed left-20 top-10 bg-slate-500 p-3" onClick={() => setShowForm(!showForm)}>
+        {showForm ? "Hide Report Form" : "View Report Form"}
+      </button>
+      {showForm && <ReportForm onClose={() => setShowForm(false)} />}
     </div>
-  )
-  //   <div>
-  //     <button onClick={() => setShowForm(!showForm)}>
-  //       {showForm ? "Hide Report Form" : "View Report Form"}
-  //     </button>
-  //     {showForm && <ReportForm onClose={() => setShowForm(false)} />}
-  //   </div>
-  // );
+  );
 }
 
 
@@ -43,8 +41,9 @@ const testingList: ReportFormData[] = [
     witnessName: "John Doe",
     witnessContact: "john.doe@example.com",
     customType: "",
-    image: null,
+    image: new File([""], "image.png", { type: "image/png" }),
     coordinates: [49.2827, -123.1207],
+    status: 'OPEN'
   },
   {
     location: "Kitsilano Beach Park",
@@ -56,6 +55,7 @@ const testingList: ReportFormData[] = [
     customType: "",
     image: null,
     coordinates: [49.2632, -123.0830],
+    status: 'OPEN'
   },
   // New Fraser Valley Entries
   {
@@ -68,6 +68,7 @@ const testingList: ReportFormData[] = [
     customType: "",
     image: null,
     coordinates: [49.0504, -122.2853],
+    status: 'OPEN'
   },
   {
     location: "Chilliwack Corn Maze",
@@ -79,6 +80,7 @@ const testingList: ReportFormData[] = [
     customType: "",
     image: null,
     coordinates: [49.1579, -121.9572],
+    status: 'OPEN'
   },
   {
     location: "Harrison Hot Springs",
@@ -90,6 +92,7 @@ const testingList: ReportFormData[] = [
     customType: "",
     image: null,
     coordinates: [49.3008, -121.7851],
+    status: 'OPEN'
   },
   {
     location: "Mission Raceway Park",
@@ -101,6 +104,7 @@ const testingList: ReportFormData[] = [
     customType: "",
     image: null,
     coordinates: [49.1239, -122.3025],
+    status: 'OPEN'
   },
   {
     location: "Langley Event Centre",
@@ -112,17 +116,19 @@ const testingList: ReportFormData[] = [
     customType: "",
     image: null,
     coordinates: [49.1013, -122.6578],
+    status: 'OPEN'
   },
 ];
 
 const testing: ReportFormData = {
-    location: "Downtown Vancouver",
-    type: "Community Event",
-    time: "10:00 AM",
-    description: "Community Cleanup Event",
-    witnessName: "John Doe",
-    witnessContact: "john.doe@example.com",
-    customType: "",
-    image: null,
-    coordinates: [49.2827, -123.1207],
-  }
+  location: "Downtown Vancouver",
+  type: "Community Event",
+  time: "10:00 AM",
+  description: "Community Cleanup Event",
+  witnessName: "John Doe",
+  witnessContact: "john.doe@example.com",
+  customType: "",
+  image: null,
+  coordinates: [49.2827, -123.1207],
+  status: 'OPEN'
+}

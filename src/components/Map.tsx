@@ -1,14 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { ReportFormData } from '../types';
-
-interface EventReport {
-  description: string;
-  date: Date;
-  location: [number, number];
-}
+import { EmergencyModal } from './EmergencyModal';
 
 interface MainMapProps {
   eventReportList: ReportFormData[];
@@ -47,17 +42,16 @@ const MapEvents: React.FC<{ eventReportList: ReportFormData[]; setVisiblePoints:
 };
 
 const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, selectedPoint=null}) => {
-
+  const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
   const defaultPosition: [number, number] = [49.27694889810881, -122.91926811371421]; 
   const zoomLevel: number = 13;
 
   return (
-    <div className="MapComponent w-full h-full">
-      
+    <div className="MapComponent w-full h-full relative z-0">
       <MapContainer
         center={defaultPosition}
         zoom={zoomLevel}
-        style={{ height: '100vh', width: '100vh' }}
+        className='w-screen h-screen z-0'
       >
         {/* deals with when the map moves, to call setVisiblePoints*/}
         <MapEvents
@@ -72,37 +66,40 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
           <Marker 
             key={index} 
             position={report.coordinates}
-            // icon={greenIcon}
-            eventHandlers={{ mouseover: (e) => { e.target.openPopup(); } }}
+            eventHandlers={{ 
+              mouseover: (e) => { e.target.openPopup(); }
+            }}
           >
             <Popup className='p-0 m-0'>
-              <a href="https://google.com">
-                <div className='m-0 p-0' style={{height: "100%", width: "100", color:"black"}}>
-                  <h3><b>{report.description}</b></h3>
-                  <p>Type: {report.type}</p>
-                  {JSON.stringify(report)}
-                  
-                  {JSON.stringify(selectedPoint)}
-                {(JSON.stringify(report)===JSON.stringify(selectedPoint))+"ad"}
-                </div>
-              </a>
+              <div 
+                className="m-0 p-2 h-full w-full text-black cursor-pointer hover:bg-slate-100"
+                onClick={() => setSelectedReport(report)}
+              >
+                <h3 className="font-bold">{report.type}</h3>
+                <p className="text-sm">{report.description.slice(0, 100)}...</p>
+                <p className="text-xs text-blue-600 mt-1">Click for details</p>
+              </div>
             </Popup>
           </Marker>
-            
-          
         ): null)}
       </MapContainer>
+
+      {selectedReport && (
+        <EmergencyModal 
+          report={localStorage.getItem('report') ? JSON.parse(localStorage.getItem('report') as string) : selectedReport} 
+          onClose={() => setSelectedReport(null)} 
+        />
+      )}
     </div>
   );
 };
 
-
-var greenIcon = L.icon({
+const greenIcon = L.icon({
     iconUrl: 'src/components/greenMarker.svg',
 
 });
 
-var blueIcon = L.icon({
+const blueIcon = L.icon({
     iconUrl: 'src/components/blueMarker.svg',
 
 });

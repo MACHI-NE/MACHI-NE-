@@ -103,27 +103,21 @@ export function FormInput({
         };
 
         return (
-            <div
-                className={`map-modal ${isAnimatingOut ? 'animate-fade-out' : 'animate-fade-in'}`}
+            <div className={`map-modal ${isAnimatingOut ? 'animate-fade-out' : 'animate-fade-in'}`}
                 onClick={handleBackdropClick}
                 onMouseUp={handleMouseUp}
             >
-                <div
-                    className={`map-container ${isAnimatingOut ? 'animate-fade-out' : 'animate-fade-in'}`}
+                <div className="map-container"
                     onClick={(e) => e.stopPropagation()}
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
                 >
-                    <button
-                        onClick={handleClose}
-                        className="close-btn"
-                        aria-label="Close form"
-                    >
+                    <button onClick={handleClose} className="close-btn" aria-label="Close map">
                         <X size={24} />
                     </button>
                     <div className="h-full w-full flex flex-col items-center justify-center gap-3">
-                        <h1 className="text-xl text-center font-bold">Choose location on Map</h1>
+                        <h1 className="text-xl text-center font-bold">Choose Location on Map</h1>
                         <Map 
                             coordinates={savedLocation || new LatLng(49.27834103633773, -122.91735596301538)} 
                             saved={isSaved}
