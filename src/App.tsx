@@ -1,10 +1,25 @@
+
 import MainMap from "./components/Map"
+// import React from "react";
+// import { Routes, Route } from "react-router-dom";
+// import Register from "./register";
+// import Login from "./login";
+
+// const App: React.FC = () => {
+//     return (
+//         <Routes>
+//             <Route path="/" element={<Login />} />
+//             <Route path="register" element={<Register />} />
+//             <Route path="login" element={<Login />} />
+//         </Routes>
+//     );
+// };
+
+// export default App;
+
 import { useState } from "react";
 import { ReportForm } from "./components/ReportForm/index.tsx";
 import { ReportFormData } from "./types.ts";
-
-
-
 
 
 export default function App() {

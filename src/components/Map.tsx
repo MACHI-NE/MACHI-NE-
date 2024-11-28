@@ -5,6 +5,24 @@ import L from 'leaflet';
 import { ReportFormData } from '../types';
 import { EmergencyModal } from './EmergencyModal';
 
+const greenIcon = L.icon({
+    iconUrl: 'src/components/greenMarker.svg',
+    iconSize: [38, 95],
+    iconAnchor: [22, 94],
+    popupAnchor: [-3, -76],
+
+});    
+
+const blueIcon = L.icon({
+    iconUrl: 'src/components/blueMarker.svg',
+    iconSize: [38, 95],
+    iconAnchor: [22, 94],
+    popupAnchor: [-3, -76],
+
+});
+
+
+
 interface MainMapProps {
   eventReportList: ReportFormData[];
   setVisiblePoints: (visiblePoints: ReportFormData[]) => void; 
@@ -41,7 +59,8 @@ const MapEvents: React.FC<{ eventReportList: ReportFormData[]; setVisiblePoints:
   return null;
 };
 
-const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, selectedPoint=null}) => {
+const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, selectedPoint = null }) => {
+  // const defaultPosition: [number, number] = () => {return(selectedPoint? selectedPoint.coordinates : [49.278987955218824, -122.91669019509023])}; 
   const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
   const defaultPosition: [number, number] = [49.27694889810881, -122.91926811371421]; 
   const zoomLevel: number = 13;
@@ -66,19 +85,14 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
           <Marker 
             key={index} 
             position={report.coordinates}
-            eventHandlers={{ 
-              mouseover: (e) => { e.target.openPopup(); }
-            }}
+            icon={(JSON.stringify(report)==JSON.stringify(selectedPoint))? greenIcon: blueIcon}
+            eventHandlers={{ mouseover: (e) => { e.target.openPopup(); } }}
           >
             <Popup className='p-0 m-0'>
-              <div 
-                className="m-0 p-2 h-full w-full text-black cursor-pointer hover:bg-slate-100"
-                onClick={() => setSelectedReport(report)}
-              >
-                <h3 className="font-bold">{report.type}</h3>
-                <p className="text-sm">{report.description.slice(0, 100)}...</p>
-                <p className="text-xs text-blue-600 mt-1">Click for details</p>
-              </div>
+                <div className='m-0 p-0' style={{height: "100%", width: "100", color:"black"}}>
+                  <h3><b>{report.description}</b></h3>
+                  <p>Type: {report.type}</p>
+                </div>
             </Popup>
           </Marker>
         ): null)}
@@ -93,16 +107,6 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
     </div>
   );
 };
-
-const greenIcon = L.icon({
-    iconUrl: 'src/components/greenMarker.svg',
-
-});
-
-const blueIcon = L.icon({
-    iconUrl: 'src/components/blueMarker.svg',
-
-});
 
 
 export default MainMap;
