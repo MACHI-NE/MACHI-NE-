@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import styles from './styles.module.css';
 import { FormInput, resetLocation } from './components/FormInput';
 import { ImageUpload } from './components/FormImageUpload';
-import type { ReportFormProps, ReportFormData } from './types';
+import type { ReportFormProps, ReportFormData } from '../../types';
 
 // Define incident types for the dropdown
 const incidentTypes = [
@@ -54,7 +54,7 @@ export function ReportForm({ onClose }: ReportFormProps) {
     const handleCoordinateChange = (coords: { lat: number; lng: number }) => {
         setFormData(prev => ({
             ...prev,
-            coordinates: coords
+            coordinates: [coords.lat, coords.lng]
         }));
     };
 
@@ -117,7 +117,7 @@ export function ReportForm({ onClose }: ReportFormProps) {
                                         type="map"
                                         label="Map:"
                                         placeholder="Enter location"
-                                        value={formData.coordinates ? `${formData.coordinates.lat.toFixed(6)}, ${formData.coordinates.lng.toFixed(6)}` : ''}
+                                        value={formData.coordinates ? `${formData.coordinates[0].toFixed(6)}, ${formData.coordinates[1].toFixed(6)}` : ''}
                                         onChange={handleChange}
                                         onCoordinateChange={handleCoordinateChange}
                                         required

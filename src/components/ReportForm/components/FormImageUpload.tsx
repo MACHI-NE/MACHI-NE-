@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReportFormData } from '../types';
+import { ReportFormData } from '../../../types';
 
 // Props interface for the ImageUpload component
 interface ImageUploadProps {
