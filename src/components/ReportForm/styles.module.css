@@ -1,0 +1,31 @@
+.formWrapper {
+    @apply bg-slate-200 text-slate-800 rounded-lg shadow-xl relative w-11/12 max-w-5xl h-[90vh] flex flex-col animate-fade-in overflow-hidden;
+}
+
+.formContainer {
+    @apply flex flex-col overflow-y-auto flex-1;
+}
+
+.formContent {
+    @apply grid md:grid-cols-5 grid-cols-1 gap-4 p-4 flex-1 min-h-0 overflow-y-auto;
+}
+
+.formColumn {
+    @apply flex flex-col gap-0;
+}
+
+.formColumnLeft {
+    @apply md:col-span-3 order-1 flex flex-col;
+}
+
+.formColumnLeft textarea {
+    @apply h-48 md:h-full;
+}
+
+.formColumnRight {
+    @apply md:col-span-2 order-2 max-h-[512px] md:max-h-none md:min-h-0 md:my-auto md:h-full;
+}
+
+.submitContainer {
+    @apply flex justify-center p-4 border-t border-gray-200;
+}
