@@ -193,7 +193,8 @@ export function FormInput({
                         tabIndex={-1}
                         className="sr-only absolute inset-0 w-full h-full"
                         required={required}
-                        value={savedLocation ? 'valid' : ''}
+                        defaultValue={savedLocation ? 'valid' : ''}
+                        onChange={() => {}}  // Add empty onChange handler
                         aria-hidden="true"
                     />
                     <button

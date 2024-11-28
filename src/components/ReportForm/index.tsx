@@ -48,16 +48,8 @@ export function ReportForm({ onClose }: ReportFormProps) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         
-        // Create a copy of form data for storage
-        const storageData = {...formData};
-        
-        // Convert File to URL if image exists
-        if (formData.image instanceof File) {
-            storageData.image = URL.createObjectURL(formData.image);
-        }
-        
-        // Add report to store instead of just localStorage
-        addReport(storageData);
+        // Add report to store
+        addReport(formData);
         onClose();
     };
 

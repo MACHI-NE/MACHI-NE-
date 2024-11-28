@@ -6,7 +6,7 @@ export interface ReportFormData {
     witnessName: string;
     witnessContact: string;
     customType: string;
-    image: File | string | null;
+    image: string | null;
     coordinates: [number, number] | null;
     status: 'OPEN' | 'RESOLVED';
 }
