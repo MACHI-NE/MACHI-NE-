@@ -4,11 +4,24 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { ReportFormData } from '../types';
 
-interface EventReport {
-  description: string;
-  date: Date;
-  location: [number, number];
-}
+
+const greenIcon = L.icon({
+    iconUrl: 'src/components/greenMarker.svg',
+    iconSize: [38, 95],
+    iconAnchor: [22, 94],
+    popupAnchor: [-3, -76],
+
+});    
+
+const blueIcon = L.icon({
+    iconUrl: 'src/components/blueMarker.svg',
+    iconSize: [38, 95],
+    iconAnchor: [22, 94],
+    popupAnchor: [-3, -76],
+
+});
+
+
 
 interface MainMapProps {
   eventReportList: ReportFormData[];
@@ -52,7 +65,7 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
   const zoomLevel: number = 13;
 
   return (
-    <div className="MapComponent w-full h-full">
+    <div className='w-screen h-screen z-0'>
       
       <MapContainer
         center={defaultPosition}
@@ -72,20 +85,14 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
           <Marker 
             key={index} 
             position={report.coordinates}
-            // icon={greenIcon}
+            icon={(JSON.stringify(report)==JSON.stringify(selectedPoint))? greenIcon: blueIcon}
             eventHandlers={{ mouseover: (e) => { e.target.openPopup(); } }}
           >
             <Popup className='p-0 m-0'>
-              <a href="https://google.com">
                 <div className='m-0 p-0' style={{height: "100%", width: "100", color:"black"}}>
                   <h3><b>{report.description}</b></h3>
                   <p>Type: {report.type}</p>
-                  {JSON.stringify(report)}
-                  
-                  {JSON.stringify(selectedPoint)}
-                {(JSON.stringify(report)===JSON.stringify(selectedPoint))+"ad"}
                 </div>
-              </a>
             </Popup>
           </Marker>
             
@@ -97,15 +104,6 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
 };
 
 
-var greenIcon = L.icon({
-    iconUrl: 'src/components/greenMarker.svg',
-
-});
-
-var blueIcon = L.icon({
-    iconUrl: 'src/components/blueMarker.svg',
-
-});
 
 
 export default MainMap;
