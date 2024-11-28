@@ -61,7 +61,9 @@ const MapEvents: React.FC<{ eventReportList: ReportFormData[]; setVisiblePoints:
 
 const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, selectedPoint=null}) => {
 
-  const defaultPosition: [number, number] = [49.27694889810881, -122.91926811371421]; 
+  // const defaultPosition: [number, number] = () => {return(selectedPoint? selectedPoint.coordinates : [49.278987955218824, -122.91669019509023])}; 
+  const defaultPosition: [number, number] = (() => {
+  return selectedPoint?.coordinates ?? [49.278987955218824, -122.91669019509023]; })();
   const zoomLevel: number = 13;
 
   return (
