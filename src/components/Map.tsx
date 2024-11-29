@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { ReportFormData } from '../types';
-import { EmergencyModal } from './EmergencyModal';
 
 const greenIcon = L.icon({
   iconUrl: 'src/components/greenMarker.svg',
@@ -89,9 +88,12 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
           >
             <Popup className='p-0 m-0'>
               <div className="m-0 p-2 h-full w-full text-black cursor-pointer"
-                onClick={() => onReportSelect(report)}>
-                <h3><b>{report.location}</b></h3>
-                <p>Type: {report.type === 'Other' ? report.customType : report.type}</p>
+              onClick={() => onReportSelect(report)}>
+              <h3><b>{report.type === 'Other' ? report.customType : report.type}</b></h3>
+              <p className="text-sm text-gray-600">
+                {new Date(report.time).toLocaleString()} • {report.status}
+              </p>
+              <p className="text-xs text-blue-600 mt-1">Click for more details</p>
               </div>
             </Popup>
           </Marker>

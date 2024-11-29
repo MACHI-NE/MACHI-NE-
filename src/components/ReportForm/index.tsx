@@ -8,11 +8,11 @@ import { addReport } from '../../store/reportStore';
 // Define incident types for the dropdown
 const incidentTypes = [
     { value: "", label: "Select a type", disabled: true },
-    { value: "Medical", label: "Medical Emergency" },
-    { value: "Traffic", label: "Traffic/Vehicle Incident" },
-    { value: "Crime", label: "Crime/Violence" },
+    { value: "Medical Emergency", label: "Medical Emergency" },
+    { value: "Traffic/Vehicle Incident", label: "Traffic/Vehicle Incident" },
+    { value: "Crime/Violence", label: "Crime/Violence" },
     { value: "Fire", label: "Fire" },
-    { value: "Natural", label: "Natural Disaster" },
+    { value: "Natural Disaster", label: "Natural Disaster" },
     { value: "Other", label: "Other" }
 ];
 
@@ -47,7 +47,7 @@ export function ReportForm({ onClose }: ReportFormProps) {
     // Handle form submission
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         // Add report to store
         addReport(formData);
         onClose();
@@ -86,8 +86,8 @@ export function ReportForm({ onClose }: ReportFormProps) {
                 </button>
 
                 <h1 className="modal-header">Create a New Report</h1>
-                <hr className="modal-divider"/>
-                
+                <hr className="modal-divider" />
+
                 <form onSubmit={handleSubmit} className="modal-content">
                     <div className="formContent">
                         <div className="formColumn formColumnLeft">
@@ -169,7 +169,7 @@ export function ReportForm({ onClose }: ReportFormProps) {
                                         placeholder="Enter name"
                                         value={formData.witnessName}
                                         onChange={handleChange}
-                                        
+
                                     />
                                     {/* Witness contact input */}
                                     <FormInput
@@ -179,11 +179,11 @@ export function ReportForm({ onClose }: ReportFormProps) {
                                         placeholder="Phone or email"
                                         value={formData.witnessContact}
                                         onChange={handleChange}
-                                        
+
                                     />
                                 </div>
                             </div>
-                            
+
                             {/* Description input */}
                             <FormInput
                                 id="description"

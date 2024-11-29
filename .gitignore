@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# For Coleman to visualize his pull requests better
+pr.md 

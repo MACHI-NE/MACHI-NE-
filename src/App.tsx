@@ -3,7 +3,23 @@ import { useState } from "react";
 import { ReportForm } from "./components/ReportForm/index.tsx";
 import { ReportFormData } from "./types.ts";
 import { EmergencyModal } from "./components/EmergencyModal";
+// import MainMap from "./components/Map"
+// import React from "react";
+// import { Routes, Route } from "react-router-dom";
+// import Register from "./register";
+// import Login from "./login";
 
+// const App: React.FC = () => {
+//   return (
+//     <Routes>
+//       <Route path="/" element={<Login />} />
+//       <Route path="register" element={<Register />} />
+//       <Route path="login" element={<Login />} />
+//     </Routes>
+//   );
+// };
+
+// export default App;
 export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
@@ -11,7 +27,7 @@ export default function App() {
   return (
     <div>
       <MainMap 
-        eventReportList={testingList}
+        eventReportList={localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList}
         setVisiblePoints={(lis) => {
           console.clear()
           console.log(lis, ",")
@@ -30,7 +46,7 @@ export default function App() {
       {showForm && <ReportForm onClose={() => setShowForm(false)} />}
       {selectedReport && (
         <EmergencyModal
-          report={JSON.parse(localStorage.getItem('reports') || '[]')[0] || selectedReport}
+          report={selectedReport}
           onClose={() => setSelectedReport(null)}
         />
       )}

@@ -38,19 +38,25 @@ const Register: React.FC = () => {
         <div className="registerContainer">
             <form onSubmit={handleSubmit}>
                 <h3>Register</h3>
-                <label>Username</label>
+                <label id="username-label">Username</label>
                 <input
                     type="text"
                     className="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    title="Enter your username"
+                    placeholder="Enter username"
+                    aria-labelledby="username-label"
                 />
-                <label>Password</label>
+                <label id="password-label">Password</label>
                 <input
                     type="password"
                     className="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    title="Enter your password"
+                    placeholder="Enter password"
+                    aria-labelledby="password-label"
                 />
                 <button type="submit" className="createButton">
                     Create
