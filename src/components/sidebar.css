@@ -1,0 +1,21 @@
+div
+{
+    color: black;
+    background-color: white;
+    width:25vw;
+    height:100vh;
+    align-content: top;
+    text-align: center;
+    z-index: -1;
+}
+
+button
+{
+    margin: 5px;
+    background-color:darkgray;
+}
+
+button:hover
+{
+    background-color: lightgray;
+}

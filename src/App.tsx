@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ReportForm } from "./components/ReportForm/index.tsx";
 import { ReportFormData } from "./types.ts";
 import { EmergencyModal } from "./components/EmergencyModal";
+import { Sidebar } from "./components/sidebar"
 // import MainMap from "./components/Map"
 // import React from "react";
 // import { Routes, Route } from "react-router-dom";
@@ -50,6 +51,7 @@ export default function App() {
           onClose={() => setSelectedReport(null)}
         />
       )}
+      <Sidebar/>
     </div>
   );
 }
