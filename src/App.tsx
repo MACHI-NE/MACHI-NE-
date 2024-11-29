@@ -3,7 +3,23 @@ import { useState } from "react";
 import { ReportForm } from "./components/ReportForm/index.tsx";
 import { ReportFormData } from "./types.ts";
 import { EmergencyModal } from "./components/EmergencyModal";
+// import MainMap from "./components/Map"
+// import React from "react";
+// import { Routes, Route } from "react-router-dom";
+// import Register from "./register";
+// import Login from "./login";
 
+// const App: React.FC = () => {
+//   return (
+//     <Routes>
+//       <Route path="/" element={<Login />} />
+//       <Route path="register" element={<Register />} />
+//       <Route path="login" element={<Login />} />
+//     </Routes>
+//   );
+// };
+
+// export default App;
 export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
