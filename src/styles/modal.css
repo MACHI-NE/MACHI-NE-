@@ -1,0 +1,111 @@
+@tailwind components;
+
+@layer components {
+
+    /* Modal styles */
+    .modal-overlay {
+        @apply fixed inset-0 bg-slate-600 bg-opacity-50 backdrop-blur-sm z-40;
+    }
+
+    .modal-backdrop {
+        @apply fixed inset-0 flex items-center justify-center bg-slate-600 bg-opacity-50 backdrop-blur-sm isolate z-[300];
+    }
+    .modal-container {
+        @apply bg-slate-200 text-slate-800 rounded-lg shadow-xl relative w-11/12 max-w-5xl h-[90vh] flex flex-col overflow-hidden z-10;
+    }
+    
+    .modal-container-map {
+        @apply bg-slate-200 text-slate-800 rounded-lg shadow-xl relative w-3/4 max-w-5xl h-[90vh] flex flex-col overflow-hidden;
+    }
+
+    .modal-header {
+        @apply text-xl text-center font-bold md:pt-6 p-3;
+    }
+
+    .modal-divider {
+        @apply border-2 border-slate-400;
+    }
+
+    .modal-content {
+        @apply flex flex-col overflow-y-auto flex-1;
+    }
+
+    /* Form layout styles */
+    .formContent {
+        @apply grid md:grid-cols-5 grid-cols-1 gap-4 p-6 flex-1 min-h-0 overflow-y-auto;
+    }
+
+    .formColumn {
+        @apply flex flex-col gap-0;
+    }
+
+    .formColumnLeft {
+        @apply order-1 flex flex-col;
+    }
+
+    .formContent .formColumnLeft {
+        @apply md:col-span-3;
+    }
+
+    .formContent .formColumnLeft:only-child {
+        @apply md:col-span-5;
+    }
+
+    .formColumnLeft textarea {
+        @apply h-48 md:h-full;
+    }
+
+    .formColumnRight {
+        @apply md:col-span-2 order-2 max-h-[512px] md:max-h-none md:min-h-0 md:my-auto md:h-full;
+    }
+
+    /* Form input styles */
+    .form-input {
+        @apply inline-block w-full px-3 py-1.5 text-base text-slate-700 placeholder-slate-600 transition duration-150 ease-in-out bg-slate-300 border border-transparent rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300 sm:text-sm sm:leading-5;
+    }
+
+    input.form-input,
+    button.form-input,
+    select.form-input,
+    textarea.form-input {
+        @apply sm:text-base text-xs;
+    }
+
+    .form-label {
+        @apply inline-block mb-2 text-base sm:text-sm font-semibold;
+    }
+
+    .form-field {
+        @apply inline-block w-full my-2;
+    }
+
+    /* Button styles */
+    .close-btn {
+        @apply bg-slate-300 border-0 absolute top-2 right-2 p-1 hover:bg-slate-400 rounded-full;
+    }
+
+    .submit-btn {
+        @apply bg-slate-500 text-white px-4 py-2 rounded-md hover:bg-slate-600 text-base sm:text-sm;
+    }
+
+    .submitContainer {
+        @apply flex justify-center p-4 border-t border-gray-200;
+    }
+
+    /* Map styles */
+    .map-modal {
+        @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+    }
+
+    .map-container {
+        @apply bg-white p-6 rounded-lg relative w-11/12 max-w-3xl h-4/5;
+    }
+
+    .button-wrapper {
+        @apply fixed left-0 top-0 w-full h-full pointer-events-none z-[200];
+    }
+
+    .report-button {
+        @apply left-20 top-10 bg-slate-500 p-3 pointer-events-auto absolute hover:bg-slate-600;
+    }
+}
