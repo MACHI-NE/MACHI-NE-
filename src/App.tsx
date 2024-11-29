@@ -30,7 +30,7 @@ export default function App() {
       {showForm && <ReportForm onClose={() => setShowForm(false)} />}
       {selectedReport && (
         <EmergencyModal
-          report={JSON.parse(localStorage.getItem('reports') || '[]')[0] || selectedReport}
+          report={selectedReport}
           onClose={() => setSelectedReport(null)}
         />
       )}

@@ -39,19 +39,25 @@ const Login: React.FC = () => {
         <div className="loginContainer">
             <form onSubmit={handleLogin}>
                 <h3>Login</h3>
-                <label>Username</label>
+                <label htmlFor="username">Username</label>
                 <input
+                    id="username"
                     type="text"
                     className="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    aria-label="Username"
+                    placeholder="Enter your username"
                 />
-                <label>Password</label>
+                <label htmlFor="password">Password</label>
                 <input
+                    id="password"
                     type="password"
                     className="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    aria-label="Password"
+                    placeholder="Enter your password"
                 />
                 <button type="submit" className="loginButton">
                     Login
