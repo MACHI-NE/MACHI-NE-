@@ -1,7 +1,7 @@
 .sidebar-component {
     padding: 10px;
     color: black;
-    background-color:rgb(226, 232, 240);
+    background-color:rgba(226, 232, 240, 0.7);
     border: 5px solid rgb(100 116 139);
     width:fit-content;
     height:100vh;

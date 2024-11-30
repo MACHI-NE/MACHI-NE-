@@ -24,33 +24,45 @@ import Sidebar from "./components/sidebar"
 export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
-  let visibleEvents : ReportFormData[] = [];
-  const [visEvents, setVisEvents] = useState(visibleEvents);
   let totalEvents : ReportFormData[] = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
   const [totEvents, setTotEvents] = useState(totalEvents);
+  let visibleEvents : ReportFormData[] = [];
+  const [visEvents, setVisEvents] = useState(visibleEvents);
 
-  function addReportEvent(newEvent:ReportFormData)
+  function addReportEvent(newEvent:ReportFormData) // NOTE: changing report status does not update the sidebar
   {
     setTotEvents((prevTotEvents)=>{
       var temp = prevTotEvents.slice();
       temp.push(newEvent);
       return temp;
     });
-    console.log('added event');
+  }
+
+  function closeEmergencyModal()
+  {
+    setSelectedReport(null);
+    //refresh page
+    
+  }
+
+  function refreshVisibleEvents(visEventsList:ReportFormData[])
+  {
+    visibleEvents = visEventsList.slice();
+    setVisEvents(visEventsList);
   }
 
   return (
     <div>
       <Sidebar 
-        displayedEventList={totalEvents}
+        displayedEventList={visEvents}
         onReportSelect={setSelectedReport}
         onReportAdd={addReportEvent}
       />
       <MainMap 
-        eventReportList={totalEvents}
+        eventReportList={totEvents}
         setVisiblePoints={(lis) => {
           console.clear()
-          console.log(lis, ",")
+          refreshVisibleEvents(lis)
         }}
         selectedPoint={testing}
         onReportSelect={setSelectedReport}
@@ -59,7 +71,7 @@ export default function App() {
       {selectedReport && (
         <EmergencyModal
           report={selectedReport}
-          onClose={() => setSelectedReport(null)}
+          onClose={() => closeEmergencyModal()}
         />
       )}
     </div>

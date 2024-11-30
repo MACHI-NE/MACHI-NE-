@@ -28,17 +28,35 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect, on
     function addReportEvent(newEvent:ReportFormData)
     {
         onReportAdd(newEvent); //trigger report list update in main app
-        displayedUIEvents = []; //clear old list of button objs
-        displayedEventList.push(newEvent); // add new entry to array of RFD's
-        displayedEventList = sortEventsList(displayedEventList); //sort the array of RFD's
-        initEventsList(displayedEventList); // regenerate the list of button objs from the array of RFD's
-        setEventsList(displayedUIEvents); //change the state of the rendered array of button objs 
+        displayedUIEvents.push(<EventUIObj emergency={newEvent} key={index++}/>);
+        console.log(displayedUIEvents);
+        setEventsList(displayedUIEvents);
     } 
-    function initEventsList(emergencies:ReportFormData[])
+    function refreshEventsList(emergencies:ReportFormData[])
     {
-        emergencies.forEach(emergency => {
-            displayedUIEvents.push(<EventUIObj emergency={emergency} key={index++}/>);
+        var prevRender : React.ReactElement[] = eventsList; //get array from last render
+        emergencies.forEach(emergency => { 
+            displayedUIEvents.push(<EventUIObj emergency={emergency} key={index++}/>); //create new array
         });
+        // if there was a change, rerender
+        var changeDetected : boolean = false;
+        if (prevRender.length != displayedUIEvents.length) // if lengths are not equal, there was a change
+        {
+            changeDetected = true;
+        }
+        else //otherwise, lengths were equal, check each entry
+        {
+            for (let i = 0; i < prevRender.length; i++)
+            {
+                if (prevRender[i].props.emergency != displayedUIEvents[i].props.emergency) //compare 
+                {
+                    changeDetected = true;
+                    break;
+                }
+            }
+        }
+        if (changeDetected)
+            setEventsList(displayedUIEvents); //change the state of the rendered array of button objs 
     }
     function sortEventsList(emergencies:ReportFormData[]) //show most recent events first
     {
@@ -58,8 +76,7 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect, on
     }
 
     displayedEventList = sortEventsList(displayedEventList);
-    initEventsList(displayedEventList);
-    
+    refreshEventsList(displayedEventList);
     // sort by most recent
     return (
         <div>
