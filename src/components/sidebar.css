@@ -1,5 +1,4 @@
-#sidebar
-{
+.sidebar-component {
     color: black;
     background-color:rgb(226, 232, 240);
     border: 5px solid rgb(100 116 139);
@@ -12,8 +11,7 @@
     z-index: 1;
 }
 
-#sidebar button
-{
+.sidebar-component button {
     margin: 5px;
     margin-top: 10px;
     padding: 5px;
@@ -21,19 +19,16 @@
     background-color:rgb(100 116 139);
 }
 
-#sidebar button:hover
-{
+.sidebar-component button:hover {
     background-color: rgb(71 85 105);
 }
 
-#eventUIItem
-{
+.sidebar-event-item {
     display: block;
     width: 100%;
 }
 
-#sidebar ul
-{
+.sidebar-component ul {
     margin: 10px;
     overflow-y: scroll;
     overflow-x: hidden;

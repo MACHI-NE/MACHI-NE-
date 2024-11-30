@@ -19,7 +19,7 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect}) =
     // UI object to create in sidebar list
     function EventUIObj({emergency}:{emergency:ReportFormData})
     {
-        return <button id="eventUIItem" onClick={() => onReportSelect(emergency)}>
+        return <button className="sidebar-event-item" onClick={() => onReportSelect(emergency)}>
                 <strong>{emergency.location}, {emergency.type}</strong>
                 <p></p> {new Date(emergency.time).toLocaleString()} , {emergency.status}
             </button>;
@@ -60,7 +60,7 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect}) =
     
     // sort by most recent
     return (
-        <div id="sidebar">
+        <div className="sidebar-component">
             <p><strong>MACHI(NE) Emergency System</strong></p>
             <button
                 onClick={() => setShowForm(!showForm)}>
