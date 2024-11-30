@@ -26,7 +26,7 @@ export default function App() {
   const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
   let totalEvents : ReportFormData[] = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
   const [totEvents, setTotEvents] = useState(totalEvents);
-  let visibleEvents : ReportFormData[] = [];
+  let visibleEvents : ReportFormData[] = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
   const [visEvents, setVisEvents] = useState(visibleEvents);
 
   function addReportEvent(newEvent:ReportFormData) // NOTE: changing report status does not update the sidebar
