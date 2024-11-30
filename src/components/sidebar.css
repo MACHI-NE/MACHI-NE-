@@ -1,21 +1,31 @@
-div
+#sidebar
 {
     color: black;
-    background-color: white;
-    width:25vw;
+    background-color:rgb(226, 232, 240);
+    border: 5px solid rgb(100 116 139);
+    width:fit-content;
     height:100vh;
     align-content: top;
     text-align: center;
-    z-index: -1;
+    float:left;
+    position: absolute;
+    z-index: 1;
 }
 
-button
+#sidebar button
 {
     margin: 5px;
-    background-color:darkgray;
+    padding: 5px;
+    color: white;
+    background-color:rgb(100 116 139);
 }
 
-button:hover
+#sidebar button:hover
 {
-    background-color: lightgray;
+    background-color: #61dafbaa;
+}
+
+#eventUIItem
+{
+    display: block;
 }

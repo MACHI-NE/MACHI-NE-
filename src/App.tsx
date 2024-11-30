@@ -27,6 +27,7 @@ export default function App() {
 
   return (
     <div>
+      <Sidebar displayedEventList={localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList}/>
       <MainMap 
         eventReportList={localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList}
         setVisiblePoints={(lis) => {
@@ -36,14 +37,14 @@ export default function App() {
         selectedPoint={testing}
         onReportSelect={setSelectedReport}
       />
-
-      <div className="button-wrapper">
+      
+{/*       <div className="button-wrapper">
         <button className="report-button"
           onClick={() => setShowForm(!showForm)}>
           {showForm ? "Hide Report Form" : "View Report Form"}
         </button>
       </div>
-      
+ */}      
       {showForm && <ReportForm onClose={() => setShowForm(false)} />}
       {selectedReport && (
         <EmergencyModal
@@ -51,7 +52,6 @@ export default function App() {
           onClose={() => setSelectedReport(null)}
         />
       )}
-      <Sidebar/>
     </div>
   );
 }
