@@ -13,5 +13,6 @@ export interface ReportFormData {
 
 export interface ReportFormProps {
     onClose: () => void;
+    onSubmit: (addedEntry : ReportFormData) => void;
 }
 

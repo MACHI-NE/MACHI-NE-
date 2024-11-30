@@ -7,9 +7,10 @@ import { useState } from "react";
 interface SidebarProps {
     displayedEventList: ReportFormData[];
     onReportSelect: (report: ReportFormData) => void;
+    onReportAdd: (report: ReportFormData) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect}) =>
+const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect, onReportAdd}) =>
 {
     let displayedUIEvents: React.ReactElement[] = []; //list of UI objects
     let index : number = 1;
@@ -22,16 +23,17 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect}) =
         return <button className="sidebar-event-item" onClick={() => onReportSelect(emergency)}>
                 <strong>{emergency.location}, {emergency.type}</strong>
                 <p></p> {new Date(emergency.time).toLocaleString()} , {emergency.status}
-            </button>;
+            </button>
     }
-    function addEventUIItem(emergency:ReportFormData) // for testing purposes
+    function addReportEvent(newEvent:ReportFormData)
     {
-        setEventsList((prevEventList) =>{
-            let temp: React.ReactElement[] = prevEventList.slice();
-            temp.push(<EventUIObj emergency={emergency} key={index++}/>);
-            return temp;
-        });
-    }
+        onReportAdd(newEvent); //trigger report list update in main app
+        displayedUIEvents = []; //clear old list of button objs
+        displayedEventList.push(newEvent); // add new entry to array of RFD's
+        displayedEventList = sortEventsList(displayedEventList); //sort the array of RFD's
+        initEventsList(displayedEventList); // regenerate the list of button objs from the array of RFD's
+        setEventsList(displayedUIEvents); //change the state of the rendered array of button objs 
+    } 
     function initEventsList(emergencies:ReportFormData[])
     {
         emergencies.forEach(emergency => {
@@ -71,10 +73,10 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect}) =
                 <p></p>
                 <p><strong>-- Nearby Reports --</strong></p>
                 <ul>
-                    <>{eventsList}</>
+                    {eventsList}
                 </ul>
             </div>
-            {showForm && <ReportForm onClose={() => setShowForm(false)} />}
+            {showForm && <ReportForm onClose={() => setShowForm(false)} onSubmit={(newEntry:ReportFormData) => addReportEvent(newEntry)}/>}
             {selectedReport && (
                 <EmergencyModal
                     report={selectedReport}

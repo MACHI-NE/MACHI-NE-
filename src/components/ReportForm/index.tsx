@@ -16,7 +16,7 @@ const incidentTypes = [
     { value: "Other", label: "Other" }
 ];
 
-export function ReportForm({ onClose }: ReportFormProps) {
+export function ReportForm({ onClose, onSubmit }: ReportFormProps ) {
     // State to manage form data
     const [formData, setFormData] = useState<ReportFormData>({
         location: "",
@@ -51,6 +51,7 @@ export function ReportForm({ onClose }: ReportFormProps) {
         // Add report to store
         addReport(formData);
         onClose();
+        onSubmit(formData);
     };
 
     // Handle coordinate changes from the map

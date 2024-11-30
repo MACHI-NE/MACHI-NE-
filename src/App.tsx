@@ -24,15 +24,30 @@ import Sidebar from "./components/sidebar"
 export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
+  let visibleEvents : ReportFormData[] = [];
+  const [visEvents, setVisEvents] = useState(visibleEvents);
+  let totalEvents : ReportFormData[] = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
+  const [totEvents, setTotEvents] = useState(totalEvents);
+
+  function addReportEvent(newEvent:ReportFormData)
+  {
+    setTotEvents((prevTotEvents)=>{
+      var temp = prevTotEvents.slice();
+      temp.push(newEvent);
+      return temp;
+    });
+    console.log('added event');
+  }
 
   return (
     <div>
       <Sidebar 
-        displayedEventList={localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList}
+        displayedEventList={totalEvents}
         onReportSelect={setSelectedReport}
+        onReportAdd={addReportEvent}
       />
       <MainMap 
-        eventReportList={localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList}
+        eventReportList={totalEvents}
         setVisiblePoints={(lis) => {
           console.clear()
           console.log(lis, ",")
@@ -40,7 +55,7 @@ export default function App() {
         selectedPoint={testing}
         onReportSelect={setSelectedReport}
       />
-      {showForm && <ReportForm onClose={() => setShowForm(false)} />}
+      {showForm && <ReportForm onClose={() => setShowForm(false)} onSubmit={(newEntry:ReportFormData) => addReportEvent(newEntry)}/>}
       {selectedReport && (
         <EmergencyModal
           report={selectedReport}
