@@ -38,11 +38,13 @@ export default function App() {
     });
   }
 
-  function closeEmergencyModal()
+  function closeEmergencyModal(closedEntry:ReportFormData)
   {
+    console.log(closedEntry);
     setSelectedReport(null);
     //refresh page
-    
+    totalEvents = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
+    setTotEvents(totalEvents);
   }
 
   function refreshVisibleEvents(visEventsList:ReportFormData[])
@@ -71,7 +73,7 @@ export default function App() {
       {selectedReport && (
         <EmergencyModal
           report={selectedReport}
-          onClose={() => closeEmergencyModal()}
+          onClose={(closedEntry:ReportFormData) => closeEmergencyModal(closedEntry)}
         />
       )}
     </div>

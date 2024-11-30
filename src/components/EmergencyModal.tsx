@@ -5,7 +5,7 @@ import { updateReportStatus } from "../store/reportStore";
 
 interface EmergencyModalProps {
     report: ReportFormData;
-    onClose: () => void;
+    onClose: (closedReport : ReportFormData) => void;
 }
 
 export function EmergencyModal({ report, onClose }: EmergencyModalProps) {
@@ -22,7 +22,7 @@ export function EmergencyModal({ report, onClose }: EmergencyModalProps) {
     const handleClose = () => {
         setIsAnimatingOut(true);
         setTimeout(() => {
-            onClose();
+            onClose(report);
             setIsAnimatingOut(false);
         }, 190);
     };
