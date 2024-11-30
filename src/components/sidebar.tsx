@@ -60,13 +60,20 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect}) =
     
     // sort by most recent
     return (
-        <div className="sidebar-component">
-            <p><strong>MACHI(NE) Emergency System</strong></p>
-            <button
-                onClick={() => setShowForm(!showForm)}>
-                {showForm ? "[-] Close Form" : "[+] Add Report"}
-            </button>
-           
+        <div>
+            <div className="sidebar-component">
+                <p><strong>MACHI(NE) Emergency System</strong></p>
+                <button
+                    onClick={() => setShowForm(!showForm)}>
+                    {showForm ? "[-] Close Form" : "[+] Add Report"}
+                </button>
+            
+                <p></p>
+                <p><strong>-- Nearby Reports --</strong></p>
+                <ul>
+                    <>{eventsList}</>
+                </ul>
+            </div>
             {showForm && <ReportForm onClose={() => setShowForm(false)} />}
             {selectedReport && (
                 <EmergencyModal
@@ -74,11 +81,6 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect}) =
                     onClose={() => setSelectedReport(null)}
                 />
             )}
-            <p></p>
-            <p><strong>-- Nearby Reports --</strong></p>
-            <ul>
-                <>{eventsList}</>
-            </ul>
         </div>
     );
 }
