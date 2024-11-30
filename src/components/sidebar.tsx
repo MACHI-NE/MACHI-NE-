@@ -4,22 +4,27 @@ import { ReportForm } from './ReportForm';
 import { EmergencyModal } from './EmergencyModal';
 import { useState } from "react";
 
-enum SortMethod
-{
-    Time,
-    Proximity,
-    Type
+interface SidebarProps {
+    displayedEventList: ReportFormData[];
+    onReportSelect: (report: ReportFormData) => void;
 }
 
-export function Sidebar({displayedEventList}: {displayedEventList:ReportFormData[]})
+const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect}) =>
 {
     let displayedUIEvents: React.ReactElement[] = []; //list of UI objects
     let index : number = 1;
     const [showForm, setShowForm] = useState(false);
     const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
     const [eventsList, setEventsList] = useState(displayedUIEvents);
-
-    function addEventUIItem(emergency:ReportFormData)
+    // UI object to create in sidebar list
+    function EventUIObj({emergency}:{emergency:ReportFormData})
+    {
+        return <button id="eventUIItem" onClick={() => onReportSelect(emergency)}>
+                <strong>{emergency.location}, {emergency.type}</strong>
+                <p></p> {new Date(emergency.time).toLocaleString()} , {emergency.status}
+            </button>;
+    }
+    function addEventUIItem(emergency:ReportFormData) // for testing purposes
     {
         setEventsList((prevEventList) =>{
             let temp: React.ReactElement[] = prevEventList.slice();
@@ -33,14 +38,33 @@ export function Sidebar({displayedEventList}: {displayedEventList:ReportFormData
             displayedUIEvents.push(<EventUIObj emergency={emergency} key={index++}/>);
         });
     }
+    function sortEventsList(emergencies:ReportFormData[]) //show most recent events first
+    {
+        let sortedEvents: ReportFormData[] = emergencies.slice();
+        sortedEvents.sort((a, b) => 
+            {
+                const timeA = new Date(a.time); //convert date string back into date objects
+                const timeB = new Date(b.time);
+                //sort with latest date appearing first,
+                if (timeA < timeB) //if timeA is earlier, place later in array
+                    return 1;
+                else if (timeB < timeA)
+                    return -1;
+                return 0; // if same time
+            });
+        return sortedEvents;
+    }
 
+    displayedEventList = sortEventsList(displayedEventList);
     initEventsList(displayedEventList);
+    
+    // sort by most recent
     return (
         <div id="sidebar">
             <p><strong>MACHI(NE) Emergency System</strong></p>
             <button
                 onClick={() => setShowForm(!showForm)}>
-                {showForm ? "Hide Report Form" : "New Report"}
+                {showForm ? "[-] Close Form" : "[+] Add Report"}
             </button>
            
             {showForm && <ReportForm onClose={() => setShowForm(false)} />}
@@ -51,10 +75,7 @@ export function Sidebar({displayedEventList}: {displayedEventList:ReportFormData
                 />
             )}
             <p></p>
-            <button>Location</button>
-            <button>Type</button>
-            <button>Time</button>
-            <button>Status</button>
+            <p><strong>-- Nearby Reports --</strong></p>
             <ul>
                 <>{eventsList}</>
             </ul>
@@ -62,9 +83,4 @@ export function Sidebar({displayedEventList}: {displayedEventList:ReportFormData
     );
 }
 
-function EventUIObj({emergency}:{emergency:ReportFormData})
-{
-    return <button id="eventUIItem">
-            {emergency.location}, {emergency.type}, {emergency.time}, {emergency.status}
-        </button>;
-}
+export default Sidebar;

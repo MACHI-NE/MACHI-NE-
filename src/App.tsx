@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ReportForm } from "./components/ReportForm/index.tsx";
 import { ReportFormData } from "./types.ts";
 import { EmergencyModal } from "./components/EmergencyModal";
-import { Sidebar } from "./components/sidebar"
+import Sidebar from "./components/sidebar"
 // import MainMap from "./components/Map"
 // import React from "react";
 // import { Routes, Route } from "react-router-dom";
@@ -27,7 +27,10 @@ export default function App() {
 
   return (
     <div>
-      <Sidebar displayedEventList={localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList}/>
+      <Sidebar 
+        displayedEventList={localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList}
+        onReportSelect={setSelectedReport}
+      />
       <MainMap 
         eventReportList={localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList}
         setVisiblePoints={(lis) => {
@@ -37,14 +40,6 @@ export default function App() {
         selectedPoint={testing}
         onReportSelect={setSelectedReport}
       />
-      
-{/*       <div className="button-wrapper">
-        <button className="report-button"
-          onClick={() => setShowForm(!showForm)}>
-          {showForm ? "Hide Report Form" : "View Report Form"}
-        </button>
-      </div>
- */}      
       {showForm && <ReportForm onClose={() => setShowForm(false)} />}
       {selectedReport && (
         <EmergencyModal

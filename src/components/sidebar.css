@@ -15,6 +15,7 @@
 #sidebar button
 {
     margin: 5px;
+    margin-top: 10px;
     padding: 5px;
     color: white;
     background-color:rgb(100 116 139);
@@ -22,10 +23,18 @@
 
 #sidebar button:hover
 {
-    background-color: #61dafbaa;
+    background-color: rgb(71 85 105);
 }
 
 #eventUIItem
 {
     display: block;
+    width: 100%;
+}
+
+#sidebar ul
+{
+    margin: 10px;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
