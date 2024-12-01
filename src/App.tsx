@@ -3,6 +3,8 @@ import { useState } from "react";
 import { ReportForm } from "./components/ReportForm/index.tsx";
 import { ReportFormData } from "./types.ts";
 import { EmergencyModal } from "./components/EmergencyModal";
+import Sidebar from "./components/sidebar"
+import { getReports } from "./store/reportStore.ts";
 // import MainMap from "./components/Map"
 // import React from "react";
 // import { Routes, Route } from "react-router-dom";
@@ -23,31 +25,75 @@ import { EmergencyModal } from "./components/EmergencyModal";
 export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
+  let totalEvents : ReportFormData[] = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
+  const [totEvents, setTotEvents] = useState(totalEvents);
+  const [visEvents, setVisEvents] = useState(localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList);
+
+  function addReportEvent(newEvent:ReportFormData) // NOTE: changing report status does not update the sidebar
+  {
+    setTotEvents((prevTotEvents)=>{
+      var temp = prevTotEvents.slice();
+      temp.push(newEvent);
+      return temp;
+    });
+    
+    refreshVisibleEvents([newEvent]);
+  }
+
+  function closeEmergencyModal()
+  {
+    setSelectedReport(null);
+    //refresh map page
+    totalEvents = getReports();
+    setTotEvents(totalEvents);
+  }
+  function updateVisEventStatus(updateEvent:ReportFormData, newStatus: 'OPEN' | 'RESOLVED') //for updating status from map pin
+  {
+    var oldIndex = visEvents.indexOf(updateEvent, 0); //get index of old entry in unrefreshed visible events
+    var newEntry : ReportFormData = { //create new copy if updated status
+      location: updateEvent.location,
+      type: updateEvent.type,
+      time: updateEvent.time,
+      description: updateEvent.description,
+      witnessName: updateEvent.witnessName,
+      witnessContact: updateEvent.witnessContact,
+      customType: updateEvent.customType,
+      image: updateEvent.image, 
+      coordinates: updateEvent.coordinates,
+      status: newStatus};
+    if (oldIndex > -1)
+    {
+      visEvents[oldIndex] = newEntry;
+    }
+  }
+
+  function refreshVisibleEvents(visEventsList:ReportFormData[])
+  {
+    setVisEvents(visEventsList);
+  }
 
   return (
     <div>
+      <Sidebar 
+        displayedEventList={visEvents}
+        onReportSelect={setSelectedReport}
+        onReportAdd={addReportEvent}
+      />
       <MainMap 
-        eventReportList={localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList}
+        eventReportList={totEvents}
         setVisiblePoints={(lis) => {
           console.clear()
-          console.log(lis, ",")
+          refreshVisibleEvents(lis)
         }}
         selectedPoint={testing}
         onReportSelect={setSelectedReport}
       />
-
-      <div className="button-wrapper">
-        <button className="report-button"
-          onClick={() => setShowForm(!showForm)}>
-          {showForm ? "Hide Report Form" : "View Report Form"}
-        </button>
-      </div>
-      
-      {showForm && <ReportForm onClose={() => setShowForm(false)} />}
+      {showForm && <ReportForm onClose={() => setShowForm(false)} onSubmit={(newEntry:ReportFormData) => addReportEvent(newEntry)}/>}
       {selectedReport && (
         <EmergencyModal
           report={selectedReport}
-          onClose={() => setSelectedReport(null)}
+          onClose={() => closeEmergencyModal()}
+          onStatusUpdate={(updatedEvent:ReportFormData, newStatus:'OPEN' | 'RESOLVED') => updateVisEventStatus(updatedEvent,newStatus)}
         />
       )}
     </div>

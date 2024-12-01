@@ -6,9 +6,10 @@ import { updateReportStatus } from "../store/reportStore";
 interface EmergencyModalProps {
     report: ReportFormData;
     onClose: () => void;
+    onStatusUpdate: (updatedEvent : ReportFormData, newStatus:'OPEN' | 'RESOLVED') => void;
 }
 
-export function EmergencyModal({ report, onClose }: EmergencyModalProps) {
+export function EmergencyModal({ report, onClose , onStatusUpdate}: EmergencyModalProps) {
     console.log(report)
     const [isAnimatingOut, setIsAnimatingOut] = useState(false);
     const [status, setStatus] = useState<'OPEN' | 'RESOLVED'>(report.status || 'OPEN');
@@ -17,6 +18,7 @@ export function EmergencyModal({ report, onClose }: EmergencyModalProps) {
         const newStatus = status === 'OPEN' ? 'RESOLVED' : 'OPEN';
         setStatus(newStatus);
         updateReportStatus(report, newStatus);
+        onStatusUpdate(report, newStatus);
     };
 
     const handleClose = () => {
