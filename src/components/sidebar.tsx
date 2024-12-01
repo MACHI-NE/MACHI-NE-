@@ -11,6 +11,13 @@ interface SidebarProps {
     onReportAdd: (report: ReportFormData) => void;
 }
 
+enum SortingMode {
+    Time,
+    Region,
+    Type,
+    Status
+}
+
 const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onReportSelect, onReportAdd}) =>
 {
     let displayedUIEvents: React.ReactElement[] = []; //list of UI objects
@@ -19,6 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
     const [showAll, setShowAll] = useState(true);
     const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
     const [eventsList, setEventsList] = useState(displayedUIEvents);
+    const [sortMod, setSortMod] = useState(SortingMode.Time);
     const [reportsText, setReportsText] = useState("-- Emergency Reports --");
     // UI object to create in sidebar list
     function EventUIObj({emergency}:{emergency:ReportFormData}) //functional component of event UI list item
@@ -65,14 +73,25 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
     }
     function toggleViewMode()
     {
-        console.log(showAll);
         var viewingAll : boolean = true;
         if (showAll)
             viewingAll = false;
         setShowAll(viewingAll);
-        console.log(showAll);
     }
-    function sortEventsList(emergencies:ReportFormData[]) //sorts with most recent (latest) events at top of list
+    function updateSort(newMode:SortingMode)
+    {
+        setSortMod(newMode);
+
+        if (showAll){
+            totalEventList = sortEventList(totalEventList);
+            refreshEventsList(totalEventList);
+        }
+        else{
+            viewableEventList = sortEventList(viewableEventList);
+            refreshEventsList(viewableEventList);
+        }
+    }
+    function sortMostRecent(emergencies:ReportFormData[]) //sorts with most recent (latest) events at top of list
     {
         let sortedEvents: ReportFormData[] = emergencies.slice();
         sortedEvents.sort((a, b) => 
@@ -88,13 +107,69 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
             });
         return sortedEvents;
     }
+    function sortRegionAlpha(emergencies:ReportFormData[])
+    {
+        let sortedEvents: ReportFormData[] = emergencies.slice();
+        sortedEvents.sort((a, b) => 
+            {
+                //sort by type name, in alphabetical 
+                if (a.location < b.location) 
+                    return -1;
+                else if (a.location < b.location)
+                    return 1;
+                return 0; 
+            });
+        return sortedEvents;
+    }
+    function sortTypeAlpha(emergencies:ReportFormData[])
+    {
+        let sortedEvents: ReportFormData[] = emergencies.slice();
+        sortedEvents.sort((a, b) => 
+            {
+                //sort by type name, in alphabetical 
+                if (a.type < b.type) 
+                    return -1;
+                else if (a.type < b.type)
+                    return 1;
+                return 0; 
+            });
+        return sortedEvents;
+    }
+    function sortStatus(emergencies:ReportFormData[])
+    {
+        let sortedEvents: ReportFormData[] = emergencies.slice();
+        sortedEvents.sort((a, b) => 
+            {
+                //sort by type name, in alphabetical 
+                if (a.status=='OPEN' && b.status=='RESOLVED') 
+                    return -1; //place 'a' earlier if is open
+                else if (a.status=='RESOLVED' && b.status=='OPEN')
+                    return 1;
+                return 0; // 
+            });
+        return sortedEvents;
+    }
+    function sortEventList(emergencies:ReportFormData[]) //sorts based on selected filters
+    {
+        let sortedEvents : ReportFormData[] = emergencies.slice();
+        if (sortMod == SortingMode.Time)
+            sortedEvents = sortMostRecent(emergencies); // sort by time
+        else if (sortMod == SortingMode.Region)
+            sortedEvents = sortRegionAlpha(emergencies); //sort by type name
+        else if (sortMod == SortingMode.Type) 
+            sortedEvents = sortTypeAlpha(emergencies);
+        else
+            sortedEvents = sortStatus(emergencies);
+
+        return sortedEvents;
+    }
 
     if (showAll){
-        totalEventList = sortEventsList(totalEventList);
+        totalEventList = sortEventList(totalEventList);
         refreshEventsList(totalEventList);
     }
     else{
-        viewableEventList = sortEventsList(viewableEventList);
+        viewableEventList = sortEventList(viewableEventList);
         refreshEventsList(viewableEventList);
     }
    
@@ -113,8 +188,25 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
                     {showAll ? "Viewing All" : "Viewing Nearby"}
                 </button>
             
-                <p></p>
+                <p><strong>Sorting Options:</strong></p>
+                <button
+                    onClick={() => updateSort(SortingMode.Time)}>
+                    {sortMod == SortingMode.Time ? "⏶ Time" : "- Time"}
+                </button>
+                <button
+                    onClick={() => updateSort(SortingMode.Region)}>
+                    {sortMod == SortingMode.Region ? "⏶ Region" : "- Region"}
+                </button>
+                <button
+                    onClick={() => updateSort(SortingMode.Type)}>
+                    {sortMod == SortingMode.Type ? "⏶ Type" : "- Type"}
+                </button>
+                <button
+                    onClick={() => updateSort(SortingMode.Status)}>
+                    {sortMod == SortingMode.Status ? "⏶ Status" : "- Status"}
+                </button>
                 <p><strong>{reportsText}</strong></p>
+                
                 <ul>
                     {eventsList}
                 </ul>
