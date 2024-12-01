@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import { MapContainer, ZoomControl, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { ReportFormData } from '../types';
@@ -68,8 +68,10 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
       <MapContainer
         center={defaultPosition}
         zoom={zoomLevel}
+        zoomControl={false}
         className='w-screen h-screen z-0'
       >
+        <ZoomControl position="bottomright"/>
         {/* deals with when the map moves, to call setVisiblePoints*/}
         <MapEvents
           eventReportList={eventReportList}
