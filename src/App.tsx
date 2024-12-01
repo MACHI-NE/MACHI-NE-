@@ -4,7 +4,6 @@ import { ReportForm } from "./components/ReportForm/index.tsx";
 import { ReportFormData } from "./types.ts";
 import { EmergencyModal } from "./components/EmergencyModal";
 import Sidebar from "./components/sidebar"
-import { getReports } from "./store/reportStore.ts";
 // import MainMap from "./components/Map"
 // import React from "react";
 // import { Routes, Route } from "react-router-dom";
@@ -26,8 +25,10 @@ export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
   let totalEvents : ReportFormData[] = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
+  let initVisEvents : ReportFormData[] = []
   const [totEvents, setTotEvents] = useState(totalEvents);
-  const [visEvents, setVisEvents] = useState(localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList);
+  const [visEvents, setVisEvents] = useState(initVisEvents);
+  const [selectCoord, setSelectCoord] = useState<[number, number] | null>([49.27694889810881, -122.91926811371421]);
 
   function addReportEvent(newEvent:ReportFormData) // NOTE: changing report status does not update the sidebar
   {
@@ -36,19 +37,23 @@ export default function App() {
       temp.push(newEvent);
       return temp;
     });
-    
-    refreshVisibleEvents([newEvent]);
+    setVisEvents((prevVisEvents)=>{
+      var temp = prevVisEvents.slice();
+      temp.push(newEvent);
+      return temp;
+    });
   }
 
   function closeEmergencyModal()
   {
     setSelectedReport(null);
-    //refresh map page
-    totalEvents = getReports();
-    setTotEvents(totalEvents);
   }
-  function updateVisEventStatus(updateEvent:ReportFormData, newStatus: 'OPEN' | 'RESOLVED') //for updating status from map pin
+  function updateSelectedStatus(updateEvent:ReportFormData, newStatus: 'OPEN' | 'RESOLVED') //for updating status from map pin
   {
+    //refresh map page
+    totalEvents = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
+    setTotEvents(totalEvents);
+    // update visible
     var oldIndex = visEvents.indexOf(updateEvent, 0); //get index of old entry in unrefreshed visible events
     var newEntry : ReportFormData = { //create new copy if updated status
       location: updateEvent.location,
@@ -71,12 +76,27 @@ export default function App() {
   {
     setVisEvents(visEventsList);
   }
+  function clickSidebarItem(clickedEvent:ReportFormData)
+  {
+    setSelectedReport(clickedEvent); // display info
+    // highlight on map
+    var newCoords : [number, number] | null = clickedEvent.coordinates;
+    // pass new coords to map
+    setSelectCoord((oldCoords)=>{
+      var temp = oldCoords;
+      temp = newCoords;
+      return temp;
+    });
+  }
 
   return (
     <div>
       <Sidebar 
-        displayedEventList={visEvents}
-        onReportSelect={setSelectedReport}
+        viewableEventList={visEvents}
+        totalEventList={totEvents}
+        onReportSelect={(clickedEvent) =>{
+          clickSidebarItem(clickedEvent)
+        }}
         onReportAdd={addReportEvent}
       />
       <MainMap 
@@ -85,7 +105,7 @@ export default function App() {
           console.clear()
           refreshVisibleEvents(lis)
         }}
-        selectedPoint={testing}
+        selectedCoord={selectCoord}
         onReportSelect={setSelectedReport}
       />
       {showForm && <ReportForm onClose={() => setShowForm(false)} onSubmit={(newEntry:ReportFormData) => addReportEvent(newEntry)}/>}
@@ -93,7 +113,7 @@ export default function App() {
         <EmergencyModal
           report={selectedReport}
           onClose={() => closeEmergencyModal()}
-          onStatusUpdate={(updatedEvent:ReportFormData, newStatus:'OPEN' | 'RESOLVED') => updateVisEventStatus(updatedEvent,newStatus)}
+          onStatusUpdate={(updatedEvent:ReportFormData, newStatus:'OPEN' | 'RESOLVED') => updateSelectedStatus(updatedEvent,newStatus)}
         />
       )}
     </div>
