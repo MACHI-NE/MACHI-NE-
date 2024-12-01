@@ -7,9 +7,10 @@ interface EmergencyModalProps {
     report: ReportFormData;
     onClose: () => void;
     onStatusUpdate: (updatedEvent : ReportFormData, newStatus:'OPEN' | 'RESOLVED') => void;
+    onReportRemove: (reportToRemove:ReportFormData) => void;
 }
 
-export function EmergencyModal({ report, onClose , onStatusUpdate}: EmergencyModalProps) {
+export function EmergencyModal({ report, onClose , onStatusUpdate, onReportRemove}: EmergencyModalProps) {
     console.log(report)
     const [isAnimatingOut, setIsAnimatingOut] = useState(false);
     const [status, setStatus] = useState<'OPEN' | 'RESOLVED'>(report.status || 'OPEN');

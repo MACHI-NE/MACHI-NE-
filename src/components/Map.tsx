@@ -1,8 +1,10 @@
 import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import { MapContainer, ZoomControl, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { ReportFormData } from '../types';
+import { useMap } from 'react-leaflet';
+import { useEffect } from 'react';
 
 const greenIcon = L.icon({
   iconUrl: 'src/components/greenMarker.svg',
@@ -25,9 +27,10 @@ const blueIcon = L.icon({
 interface MainMapProps {
   eventReportList: ReportFormData[];
   setVisiblePoints: (visiblePoints: ReportFormData[]) => void;
-  selectedPoint: null | ReportFormData;
+  selectedCoord: [number, number] | null;
   onReportSelect: (report: ReportFormData) => void;
 }
+
 
 
 // function MapEvents takes in List of reports and func for visible points
@@ -59,22 +62,42 @@ const MapEvents: React.FC<{ eventReportList: ReportFormData[]; setVisiblePoints:
     return null;
   };
 
-const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, selectedPoint = null, onReportSelect }) => {
-  const defaultPosition: [number, number] = [49.27694889810881, -122.91926811371421];
-  const zoomLevel: number = 13;
 
+
+// CenterMap component re-centers the map when selectedCoord changes
+const CenterMap: React.FC<{ selectedCoord: [number, number] | null }> = ({ selectedCoord }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (selectedCoord) {
+      map.setView(selectedCoord, 15); // Use setView to move map center
+    }
+  }, [selectedCoord, map]);
+
+  return null;
+};
+
+
+
+const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, selectedCoord = null, onReportSelect }) => {
+  var defaultPosition: [number, number] = [49.27694889810881, -122.91926811371421];
+  const zoomLevel: number = 13;
   return (
     <div className="MapComponent w-full h-full relative z-0">
       <MapContainer
         center={defaultPosition}
         zoom={zoomLevel}
+        zoomControl={false}
         className='w-screen h-screen z-0'
       >
+        <ZoomControl position="bottomright"/>
         {/* deals with when the map moves, to call setVisiblePoints*/}
         <MapEvents
           eventReportList={eventReportList}
           setVisiblePoints={setVisiblePoints}
         />
+        <CenterMap selectedCoord={selectedCoord} />
+
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -83,8 +106,8 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
           <Marker
             key={index}
             position={report.coordinates}
-            icon={(JSON.stringify(report) == JSON.stringify(selectedPoint)) ? greenIcon : blueIcon}
-            eventHandlers={{ mouseover: (e) => { e.target.openPopup(); } }}
+            icon={(report.coordinates == selectedCoord) ? greenIcon : blueIcon}
+            eventHandlers={{ click: (e) => { e.target.openPopup(); } }}
           >
             <Popup className='p-0 m-0'>
               <div className="m-0 p-2 h-full w-full text-black cursor-pointer"

@@ -5,19 +5,28 @@ import { EmergencyModal } from './EmergencyModal';
 import { useState } from "react";
 
 interface SidebarProps {
-    displayedEventList: ReportFormData[];
+    viewableEventList: ReportFormData[];
+    totalEventList: ReportFormData[];
     onReportSelect: (report: ReportFormData) => void;
     onReportAdd: (report: ReportFormData) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect, onReportAdd}) =>
+enum SortingMode {
+    Time,
+    Region,
+    Type,
+    Status
+}
+
+const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onReportSelect, onReportAdd}) =>
 {
     let displayedUIEvents: React.ReactElement[] = []; //list of UI objects
     let index : number = 1;
     const [showForm, setShowForm] = useState(false);
+    const [showAll, setShowAll] = useState(true);
     const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
     const [eventsList, setEventsList] = useState(displayedUIEvents);
-    const [reportsText, setReportsText] = useState("-- Nearby Reports --");
+    const [sortMod, setSortMod] = useState(SortingMode.Time);
     // UI object to create in sidebar list
     function EventUIObj({emergency}:{emergency:ReportFormData}) //functional component of event UI list item
     {
@@ -29,15 +38,7 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect, on
     function addReportEvent(newEvent:ReportFormData) //when adding new report via sidebar
     {
         onReportAdd(newEvent); //trigger report list update in main app
-        displayedUIEvents.push(<EventUIObj emergency={newEvent} key={index++}/>);
-        console.log(displayedUIEvents);
-        setEventsList(displayedUIEvents);
-        setReportsText("Successfully Added Report:");
     } 
-    function updateVisEventStatus(updateEvent:ReportFormData, newStatus: 'OPEN' | 'RESOLVED') // for updating status from sidebar
-    {
-       
-    }
     function refreshEventsList(emergencies:ReportFormData[]) //for handling list rerendering after map moves
     {
         var prevRender : React.ReactElement[] = eventsList; //get array from last render
@@ -58,14 +59,29 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect, on
             }
         }
         if (changeDetected)
-        {
-            //update success text if no longer needed
-            if (prevRender.length == 1 && reportsText == "Successfully Added Report:")
-                setReportsText("-- Nearby Reports --");
             setEventsList(displayedUIEvents); //change the state of the rendered array of button objs 
+    }
+    function toggleViewMode()
+    {
+        var viewingAll : boolean = true;
+        if (showAll)
+            viewingAll = false;
+        setShowAll(viewingAll);
+    }
+    function updateSort(newMode:SortingMode)
+    {
+        setSortMod(newMode);
+
+        if (showAll){
+            totalEventList = sortEventList(totalEventList);
+            refreshEventsList(totalEventList);
+        }
+        else{
+            viewableEventList = sortEventList(viewableEventList);
+            refreshEventsList(viewableEventList);
         }
     }
-    function sortEventsList(emergencies:ReportFormData[]) //sorts with most recent (latest) events at top of list
+    function sortMostRecent(emergencies:ReportFormData[]) //sorts with most recent (latest) events at top of list
     {
         let sortedEvents: ReportFormData[] = emergencies.slice();
         sortedEvents.sort((a, b) => 
@@ -81,9 +97,72 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect, on
             });
         return sortedEvents;
     }
+    function sortRegionAlpha(emergencies:ReportFormData[])
+    {
+        let sortedEvents: ReportFormData[] = emergencies.slice();
+        sortedEvents.sort((a, b) => 
+            {
+                //sort by type name, in alphabetical 
+                if (a.location < b.location) 
+                    return -1;
+                else if (a.location < b.location)
+                    return 1;
+                return 0; 
+            });
+        return sortedEvents;
+    }
+    function sortTypeAlpha(emergencies:ReportFormData[])
+    {
+        let sortedEvents: ReportFormData[] = emergencies.slice();
+        sortedEvents.sort((a, b) => 
+            {
+                //sort by type name, in alphabetical 
+                if (a.type < b.type) 
+                    return -1;
+                else if (a.type < b.type)
+                    return 1;
+                return 0; 
+            });
+        return sortedEvents;
+    }
+    function sortStatus(emergencies:ReportFormData[])
+    {
+        let sortedEvents: ReportFormData[] = emergencies.slice();
+        sortedEvents.sort((a, b) => 
+            {
+                //sort by type name, in alphabetical 
+                if (a.status=='OPEN' && b.status=='RESOLVED') 
+                    return -1; //place 'a' earlier if is open
+                else if (a.status=='RESOLVED' && b.status=='OPEN')
+                    return 1;
+                return 0; // 
+            });
+        return sortedEvents;
+    }
+    function sortEventList(emergencies:ReportFormData[]) //sorts based on selected filters
+    {
+        let sortedEvents : ReportFormData[] = emergencies.slice();
+        if (sortMod == SortingMode.Time)
+            sortedEvents = sortMostRecent(emergencies); // sort by time
+        else if (sortMod == SortingMode.Region)
+            sortedEvents = sortRegionAlpha(emergencies); //sort by type name
+        else if (sortMod == SortingMode.Type) 
+            sortedEvents = sortTypeAlpha(emergencies);
+        else
+            sortedEvents = sortStatus(emergencies);
 
-    displayedEventList = sortEventsList(displayedEventList);
-    refreshEventsList(displayedEventList);
+        return sortedEvents;
+    }
+
+    if (showAll){
+        totalEventList = sortEventList(totalEventList);
+        refreshEventsList(totalEventList);
+    }
+    else{
+        viewableEventList = sortEventList(viewableEventList);
+        refreshEventsList(viewableEventList);
+    }
+   
     // sort by most recent
     return (
         <div>
@@ -93,9 +172,31 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect, on
                     onClick={() => setShowForm(!showForm)}>
                     {showForm ? "[-] Close Form" : "[+] Add Report"}
                 </button>
+
+                <button
+                    onClick={() => toggleViewMode()}>
+                    {showAll ? "Viewing All" : "Viewing Nearby"}
+                </button>
             
-                <p></p>
-                <p><strong>{reportsText}</strong></p>
+                <p><strong>Sorting Options:</strong></p>
+                <button
+                    onClick={() => updateSort(SortingMode.Time)}>
+                    {sortMod == SortingMode.Time ? "⏶ Time" : "- Time"}
+                </button>
+                <button
+                    onClick={() => updateSort(SortingMode.Region)}>
+                    {sortMod == SortingMode.Region ? "⏶ Region" : "- Region"}
+                </button>
+                <button
+                    onClick={() => updateSort(SortingMode.Type)}>
+                    {sortMod == SortingMode.Type ? "⏶ Type" : "- Type"}
+                </button>
+                <button
+                    onClick={() => updateSort(SortingMode.Status)}>
+                    {sortMod == SortingMode.Status ? "⏶ Status" : "- Status"}
+                </button>
+                <p><strong>-- Emergency Reports --</strong></p>
+                
                 <ul>
                     {eventsList}
                 </ul>
@@ -106,6 +207,7 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect, on
                     report={selectedReport}
                     onClose={() => setSelectedReport(null)}
                     onStatusUpdate={() => null}
+                    onReportRemove={() => null}
                 />
             )}
         </div>
