@@ -33,6 +33,7 @@ export function EmergencyModal({ report, onClose , onStatusUpdate, onReportRemov
         if (password === correctPassword) {
             deleteReport(report);
             alert("Report deleted successfully.");
+            onReportRemove(report);
             onClose();
         } else {
             alert("Incorrect password. Please try again.");
