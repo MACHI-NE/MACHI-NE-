@@ -17,22 +17,28 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect, on
     const [showForm, setShowForm] = useState(false);
     const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
     const [eventsList, setEventsList] = useState(displayedUIEvents);
+    const [reportsText, setReportsText] = useState("-- Nearby Reports --");
     // UI object to create in sidebar list
-    function EventUIObj({emergency}:{emergency:ReportFormData})
+    function EventUIObj({emergency}:{emergency:ReportFormData}) //functional component of event UI list item
     {
         return <button className="sidebar-event-item" onClick={() => onReportSelect(emergency)}>
                 <strong>{emergency.location}, {emergency.type}</strong>
                 <p></p> {new Date(emergency.time).toLocaleString()} , {emergency.status}
             </button>
     }
-    function addReportEvent(newEvent:ReportFormData)
+    function addReportEvent(newEvent:ReportFormData) //when adding new report via sidebar
     {
         onReportAdd(newEvent); //trigger report list update in main app
         displayedUIEvents.push(<EventUIObj emergency={newEvent} key={index++}/>);
         console.log(displayedUIEvents);
         setEventsList(displayedUIEvents);
+        setReportsText("Successfully Added Report:");
     } 
-    function refreshEventsList(emergencies:ReportFormData[])
+    function updateVisEventStatus(updateEvent:ReportFormData, newStatus: 'OPEN' | 'RESOLVED') // for updating status from sidebar
+    {
+       
+    }
+    function refreshEventsList(emergencies:ReportFormData[]) //for handling list rerendering after map moves
     {
         var prevRender : React.ReactElement[] = eventsList; //get array from last render
         emergencies.forEach(emergency => { 
@@ -41,24 +47,25 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect, on
         // if there was a change, rerender
         var changeDetected : boolean = false;
         if (prevRender.length != displayedUIEvents.length) // if lengths are not equal, there was a change
-        {
             changeDetected = true;
-        }
         else //otherwise, lengths were equal, check each entry
         {
-            for (let i = 0; i < prevRender.length; i++)
-            {
-                if (prevRender[i].props.emergency != displayedUIEvents[i].props.emergency) //compare 
-                {
+            for (let i = 0; i < prevRender.length; i++){
+                if (prevRender[i].props.emergency != displayedUIEvents[i].props.emergency){ //compare
                     changeDetected = true;
                     break;
                 }
             }
         }
         if (changeDetected)
+        {
+            //update success text if no longer needed
+            if (prevRender.length == 1 && reportsText == "Successfully Added Report:")
+                setReportsText("-- Nearby Reports --");
             setEventsList(displayedUIEvents); //change the state of the rendered array of button objs 
+        }
     }
-    function sortEventsList(emergencies:ReportFormData[]) //show most recent events first
+    function sortEventsList(emergencies:ReportFormData[]) //sorts with most recent (latest) events at top of list
     {
         let sortedEvents: ReportFormData[] = emergencies.slice();
         sortedEvents.sort((a, b) => 
@@ -88,7 +95,7 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect, on
                 </button>
             
                 <p></p>
-                <p><strong>-- Nearby Reports --</strong></p>
+                <p><strong>{reportsText}</strong></p>
                 <ul>
                     {eventsList}
                 </ul>
@@ -98,6 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({displayedEventList, onReportSelect, on
                 <EmergencyModal
                     report={selectedReport}
                     onClose={() => setSelectedReport(null)}
+                    onStatusUpdate={() => null}
                 />
             )}
         </div>

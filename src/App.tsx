@@ -4,6 +4,7 @@ import { ReportForm } from "./components/ReportForm/index.tsx";
 import { ReportFormData } from "./types.ts";
 import { EmergencyModal } from "./components/EmergencyModal";
 import Sidebar from "./components/sidebar"
+import { getReports } from "./store/reportStore.ts";
 // import MainMap from "./components/Map"
 // import React from "react";
 // import { Routes, Route } from "react-router-dom";
@@ -26,8 +27,7 @@ export default function App() {
   const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
   let totalEvents : ReportFormData[] = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
   const [totEvents, setTotEvents] = useState(totalEvents);
-  let visibleEvents : ReportFormData[] = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
-  const [visEvents, setVisEvents] = useState(visibleEvents);
+  const [visEvents, setVisEvents] = useState(localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList);
 
   function addReportEvent(newEvent:ReportFormData) // NOTE: changing report status does not update the sidebar
   {
@@ -36,20 +36,39 @@ export default function App() {
       temp.push(newEvent);
       return temp;
     });
+    
+    refreshVisibleEvents([newEvent]);
   }
 
-  function closeEmergencyModal(closedEntry:ReportFormData)
+  function closeEmergencyModal()
   {
-    console.log(closedEntry);
     setSelectedReport(null);
-    //refresh page
-    totalEvents = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
+    //refresh map page
+    totalEvents = getReports();
     setTotEvents(totalEvents);
+  }
+  function updateVisEventStatus(updateEvent:ReportFormData, newStatus: 'OPEN' | 'RESOLVED') //for updating status from map pin
+  {
+    var oldIndex = visEvents.indexOf(updateEvent, 0); //get index of old entry in unrefreshed visible events
+    var newEntry : ReportFormData = { //create new copy if updated status
+      location: updateEvent.location,
+      type: updateEvent.type,
+      time: updateEvent.time,
+      description: updateEvent.description,
+      witnessName: updateEvent.witnessName,
+      witnessContact: updateEvent.witnessContact,
+      customType: updateEvent.customType,
+      image: updateEvent.image, 
+      coordinates: updateEvent.coordinates,
+      status: newStatus};
+    if (oldIndex > -1)
+    {
+      visEvents[oldIndex] = newEntry;
+    }
   }
 
   function refreshVisibleEvents(visEventsList:ReportFormData[])
   {
-    visibleEvents = visEventsList.slice();
     setVisEvents(visEventsList);
   }
 
@@ -73,7 +92,8 @@ export default function App() {
       {selectedReport && (
         <EmergencyModal
           report={selectedReport}
-          onClose={(closedEntry:ReportFormData) => closeEmergencyModal(closedEntry)}
+          onClose={() => closeEmergencyModal()}
+          onStatusUpdate={(updatedEvent:ReportFormData, newStatus:'OPEN' | 'RESOLVED') => updateVisEventStatus(updatedEvent,newStatus)}
         />
       )}
     </div>
