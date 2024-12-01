@@ -30,7 +30,7 @@ export default function App() {
   const [visEvents, setVisEvents] = useState(initVisEvents);
   const [selectCoord, setSelectCoord] = useState<[number, number] | null>([49.27694889810881, -122.91926811371421]);
 
-  function addReportEvent(newEvent:ReportFormData) // NOTE: changing report status does not update the sidebar
+  function addReportEvent(newEvent:ReportFormData) 
   {
     setTotEvents((prevTotEvents)=>{
       var temp = prevTotEvents.slice();
@@ -42,6 +42,18 @@ export default function App() {
       temp.push(newEvent);
       return temp;
     });
+  }
+  function removeReportEvent(remEvent:ReportFormData) 
+  {
+    //refresh total events
+    totalEvents = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
+    setTotEvents(totalEvents);
+    //refresh visible events
+    var remIndex = visEvents.indexOf(remEvent, 0); //get index of entry to remove
+    if (remIndex > -1) //if the removed entry is in the rendered visible events,
+    { //remove it
+      visEvents.splice(remIndex, 1);
+    }
   }
 
   function closeEmergencyModal()
@@ -114,6 +126,7 @@ export default function App() {
           report={selectedReport}
           onClose={() => closeEmergencyModal()}
           onStatusUpdate={(updatedEvent:ReportFormData, newStatus:'OPEN' | 'RESOLVED') => updateSelectedStatus(updatedEvent,newStatus)}
+          onReportRemove={(reportToRemove:ReportFormData) => removeReportEvent(reportToRemove)}
         />
       )}
     </div>

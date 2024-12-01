@@ -207,6 +207,7 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
                     report={selectedReport}
                     onClose={() => setSelectedReport(null)}
                     onStatusUpdate={() => null}
+                    onReportRemove={() => null}
                 />
             )}
         </div>
