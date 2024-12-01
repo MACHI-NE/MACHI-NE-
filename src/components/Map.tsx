@@ -70,7 +70,7 @@ const CenterMap: React.FC<{ selectedCoord: [number, number] | null }> = ({ selec
 
   useEffect(() => {
     if (selectedCoord) {
-      map.setView(selectedCoord, map.getZoom()); // Use setView to move map center
+      map.setView(selectedCoord, 15); // Use setView to move map center
     }
   }, [selectedCoord, map]);
 
@@ -82,15 +82,7 @@ const CenterMap: React.FC<{ selectedCoord: [number, number] | null }> = ({ selec
 const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, selectedCoord = null, onReportSelect }) => {
   var defaultPosition: [number, number] = [49.27694889810881, -122.91926811371421];
   const zoomLevel: number = 13;
-  function moveToSelected()
-  {
-    if (selectedCoord != null)
-    {
-      console.log(selectedCoord);
-      defaultPosition = selectedCoord;
-    }
-  }
-  moveToSelected();
+  console.log(selectedCoord);
   return (
     <div className="MapComponent w-full h-full relative z-0">
       <MapContainer
@@ -116,7 +108,7 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
             key={index}
             position={report.coordinates}
             icon={(report.coordinates == selectedCoord) ? greenIcon : blueIcon}
-            eventHandlers={{ mouseover: (e) => { e.target.openPopup(); } }}
+            eventHandlers={{ click: (e) => { e.target.openPopup(); } }}
           >
             <Popup className='p-0 m-0'>
               <div className="m-0 p-2 h-full w-full text-black cursor-pointer"

@@ -4,7 +4,6 @@ import { ReportForm } from "./components/ReportForm/index.tsx";
 import { ReportFormData } from "./types.ts";
 import { EmergencyModal } from "./components/EmergencyModal";
 import Sidebar from "./components/sidebar"
-import { getReports } from "./store/reportStore.ts";
 // import MainMap from "./components/Map"
 // import React from "react";
 // import { Routes, Route } from "react-router-dom";
@@ -49,7 +48,7 @@ export default function App() {
   {
     setSelectedReport(null);
     //refresh map page
-    totalEvents = getReports();
+    totalEvents = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
     setTotEvents(totalEvents);
   }
   function updateVisEventStatus(updateEvent:ReportFormData, newStatus: 'OPEN' | 'RESOLVED') //for updating status from map pin
