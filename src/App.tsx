@@ -47,12 +47,13 @@ export default function App() {
   function closeEmergencyModal()
   {
     setSelectedReport(null);
+  }
+  function updateSelectedStatus(updateEvent:ReportFormData, newStatus: 'OPEN' | 'RESOLVED') //for updating status from map pin
+  {
     //refresh map page
     totalEvents = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
     setTotEvents(totalEvents);
-  }
-  function updateVisEventStatus(updateEvent:ReportFormData, newStatus: 'OPEN' | 'RESOLVED') //for updating status from map pin
-  {
+    // update visible
     var oldIndex = visEvents.indexOf(updateEvent, 0); //get index of old entry in unrefreshed visible events
     var newEntry : ReportFormData = { //create new copy if updated status
       location: updateEvent.location,
@@ -112,7 +113,7 @@ export default function App() {
         <EmergencyModal
           report={selectedReport}
           onClose={() => closeEmergencyModal()}
-          onStatusUpdate={(updatedEvent:ReportFormData, newStatus:'OPEN' | 'RESOLVED') => updateVisEventStatus(updatedEvent,newStatus)}
+          onStatusUpdate={(updatedEvent:ReportFormData, newStatus:'OPEN' | 'RESOLVED') => updateSelectedStatus(updatedEvent,newStatus)}
         />
       )}
     </div>
