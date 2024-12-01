@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import { ReportFormData } from "../types";
 import { useState } from "react";
-import { updateReportStatus } from "../store/reportStore";
+import { deleteReport, updateReportStatus } from "../store/reportStore";
 
 interface EmergencyModalProps {
     report: ReportFormData;
@@ -20,6 +20,25 @@ export function EmergencyModal({ report, onClose , onStatusUpdate}: EmergencyMod
         updateReportStatus(report, newStatus);
         onStatusUpdate(report, newStatus);
     };
+
+    // Password functions
+    const [showPasswordInput, setShowPasswordInput] = useState(false);
+    const [password, setPassword] = useState("");
+    const correctPassword = "temp";
+    const passwordRequest = () => {
+        setShowPasswordInput(true);
+    }
+    const handlePasswordSubmit = () => {
+        if (password === correctPassword) {
+            deleteReport(report);
+            alert("Report deleted successfully.");
+            onClose();
+        } else {
+            alert("Incorrect password. Please try again.");
+            setPassword("");
+        }
+    };
+    
 
     const handleClose = () => {
         setIsAnimatingOut(true);
@@ -40,28 +59,65 @@ export function EmergencyModal({ report, onClose , onStatusUpdate}: EmergencyMod
                     <X size={24} />
                 </button>
 
-                <h1 className="modal-header">Emergency Report Details</h1>
-                
-                {/* Status Section */}
-                <div className="submitContainer flex justify-center items-center bg-slate-200">
-                    <div className="flex items-center gap-2">
-                        <span className="text-base font-semibold">Status:</span>
-                        <span className={`px-2 py-1 text-base font-bold rounded border ${status === 'OPEN'
-                            ? 'bg-yellow-300 text-yellow-950 border-yellow-500'
-                            : 'bg-green-500 text-green-950 border-green-700'
-                            }`}>
-                            {status}
-                        </span>
-                        <button
-                            onClick={handleStatusToggle}
-                            className="submit-btn text-base"
-                            type="button"
-                        >
-                            Mark as {status === 'OPEN' ? 'RESOLVED' : 'OPEN'}
-                        </button>
-
+                {!showPasswordInput ? (
+                    <>
+                        <h1 className="modal-header">Emergency Report Details</h1>
+                        <div className="submitContainer flex justify-center items-center bg-slate-200">
+                            <div className="flex items-center gap-2">
+                                <span className="text-base font-semibold">Status:</span>
+                                <span
+                                    className={`px-2 py-1 text-base font-bold rounded border ${
+                                        status === 'OPEN'
+                                            ? 'bg-yellow-300 text-yellow-950 border-yellow-500'
+                                            : 'bg-green-500 text-green-950 border-green-700'
+                                    }`}
+                                >
+                                    {status}
+                                </span>
+                                <button
+                                    onClick={handleStatusToggle}
+                                    className="submit-btn text-base"
+                                    type="button"
+                                >
+                                    Mark as {status === 'OPEN' ? 'RESOLVED' : 'OPEN'}
+                                </button>
+                                <button
+                                    onClick={passwordRequest}
+                                    className="delete-btn text-base"
+                                    type="button"
+                                >
+                                    Delete Report
+                                </button>
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <div className="password-container">
+                        <h1 className="modal-header">Enter Password to Delete Report</h1>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="input-field border rounded px-4 py-2 mt-4 w-full"
+                            placeholder="Enter Password"
+                        />
+                        <div className="flex justify-end gap-4 mt-4">
+                            <button
+                                onClick={handlePasswordSubmit}
+                                className="submit-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                            >
+                                Submit
+                            </button>
+                            <button
+                                onClick={() => setShowPasswordInput(false)}
+                                className="cancel-btn bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400"
+                            >
+                                Cancel
+                            </button>
+                        </div>
                     </div>
-                </div>
+                )}
+
 
                 <div className="modal-divider"></div>
                 <div className="modal-content">
