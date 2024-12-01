@@ -26,9 +26,10 @@ export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
   let totalEvents : ReportFormData[] = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
+  let initVisEvents : ReportFormData[] = []
   const [totEvents, setTotEvents] = useState(totalEvents);
-  const [visEvents, setVisEvents] = useState(localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList);
-  const [viewAll, setViewAll] = useState(true);
+  const [visEvents, setVisEvents] = useState(initVisEvents);
+  const [selectCoord, setSelectCoord] = useState<[number, number] | null>([49.27694889810881, -122.91926811371421]);
 
   function addReportEvent(newEvent:ReportFormData) // NOTE: changing report status does not update the sidebar
   {
@@ -37,8 +38,11 @@ export default function App() {
       temp.push(newEvent);
       return temp;
     });
-    
-    refreshVisibleEvents([newEvent]);
+    setVisEvents((prevVisEvents)=>{
+      var temp = prevVisEvents.slice();
+      temp.push(newEvent);
+      return temp;
+    });
   }
 
   function closeEmergencyModal()
@@ -72,13 +76,17 @@ export default function App() {
   {
     setVisEvents(visEventsList);
   }
-  function moveToSidebarEvent(clickedEvent:ReportFormData)
+  function clickSidebarItem(clickedEvent:ReportFormData)
   {
-    console.log(clickedEvent.coordinates);
-  }
-  function toggleViewMode(seeAll:boolean)
-  {
-
+    setSelectedReport(clickedEvent); // display info
+    // highlight on map
+    var newCoords : [number, number] | null = clickedEvent.coordinates;
+    // pass new coords to map
+    setSelectCoord((oldCoords)=>{
+      var temp = oldCoords;
+      temp = newCoords;
+      return temp;
+    });
   }
 
   return (
@@ -87,7 +95,7 @@ export default function App() {
         viewableEventList={visEvents}
         totalEventList={totEvents}
         onReportSelect={(clickedEvent) =>{
-          moveToSidebarEvent(clickedEvent)
+          clickSidebarItem(clickedEvent)
         }}
         onReportAdd={addReportEvent}
       />
@@ -98,6 +106,7 @@ export default function App() {
           refreshVisibleEvents(lis)
         }}
         selectedPoint={testing}
+        selectedCoord={selectCoord}
         onReportSelect={setSelectedReport}
       />
       {showForm && <ReportForm onClose={() => setShowForm(false)} onSubmit={(newEntry:ReportFormData) => addReportEvent(newEntry)}/>}

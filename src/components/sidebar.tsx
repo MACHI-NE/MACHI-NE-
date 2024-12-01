@@ -27,7 +27,6 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
     const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
     const [eventsList, setEventsList] = useState(displayedUIEvents);
     const [sortMod, setSortMod] = useState(SortingMode.Time);
-    const [reportsText, setReportsText] = useState("-- Emergency Reports --");
     // UI object to create in sidebar list
     function EventUIObj({emergency}:{emergency:ReportFormData}) //functional component of event UI list item
     {
@@ -39,10 +38,6 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
     function addReportEvent(newEvent:ReportFormData) //when adding new report via sidebar
     {
         onReportAdd(newEvent); //trigger report list update in main app
-        displayedUIEvents.push(<EventUIObj emergency={newEvent} key={index++}/>);
-        console.log(displayedUIEvents);
-        setEventsList(displayedUIEvents);
-        setReportsText("Successfully Added Report:");
     } 
     function refreshEventsList(emergencies:ReportFormData[]) //for handling list rerendering after map moves
     {
@@ -64,12 +59,7 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
             }
         }
         if (changeDetected)
-        {
-            //update success text if no longer needed
-            if (prevRender.length == 1 && reportsText == "Successfully Added Report:")
-                setReportsText("-- Emergency Reports --");
             setEventsList(displayedUIEvents); //change the state of the rendered array of button objs 
-        }
     }
     function toggleViewMode()
     {
@@ -205,7 +195,7 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
                     onClick={() => updateSort(SortingMode.Status)}>
                     {sortMod == SortingMode.Status ? "⏶ Status" : "- Status"}
                 </button>
-                <p><strong>{reportsText}</strong></p>
+                <p><strong>-- Emergency Reports --</strong></p>
                 
                 <ul>
                     {eventsList}

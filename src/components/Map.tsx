@@ -26,6 +26,7 @@ interface MainMapProps {
   eventReportList: ReportFormData[];
   setVisiblePoints: (visiblePoints: ReportFormData[]) => void;
   selectedPoint: null | ReportFormData;
+  selectedCoord: [number, number] | null;
   onReportSelect: (report: ReportFormData) => void;
 }
 
@@ -59,10 +60,17 @@ const MapEvents: React.FC<{ eventReportList: ReportFormData[]; setVisiblePoints:
     return null;
   };
 
-const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, selectedPoint = null, onReportSelect }) => {
+const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, selectedPoint = null, selectedCoord = null, onReportSelect }) => {
   const defaultPosition: [number, number] = [49.27694889810881, -122.91926811371421];
   const zoomLevel: number = 13;
-
+  function moveToSelected()
+  {
+    if (selectedCoord != null)
+    {
+      console.log(selectedCoord);
+    }
+  }
+  moveToSelected();
   return (
     <div className="MapComponent w-full h-full relative z-0">
       <MapContainer
