@@ -105,7 +105,6 @@ export default function App() {
           console.clear()
           refreshVisibleEvents(lis)
         }}
-        selectedPoint={testing}
         selectedCoord={selectCoord}
         onReportSelect={setSelectedReport}
       />
