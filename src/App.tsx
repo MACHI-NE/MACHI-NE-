@@ -28,6 +28,7 @@ export default function App() {
   let totalEvents : ReportFormData[] = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;
   const [totEvents, setTotEvents] = useState(totalEvents);
   const [visEvents, setVisEvents] = useState(localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList);
+  const [viewAll, setViewAll] = useState(true);
 
   function addReportEvent(newEvent:ReportFormData) // NOTE: changing report status does not update the sidebar
   {
@@ -71,12 +72,23 @@ export default function App() {
   {
     setVisEvents(visEventsList);
   }
+  function moveToSidebarEvent(clickedEvent:ReportFormData)
+  {
+    console.log(clickedEvent.coordinates);
+  }
+  function toggleViewMode(seeAll:boolean)
+  {
+
+  }
 
   return (
     <div>
       <Sidebar 
-        displayedEventList={visEvents}
-        onReportSelect={setSelectedReport}
+        viewableEventList={visEvents}
+        totalEventList={totEvents}
+        onReportSelect={(clickedEvent) =>{
+          moveToSidebarEvent(clickedEvent)
+        }}
         onReportAdd={addReportEvent}
       />
       <MainMap 
