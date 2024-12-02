@@ -15,10 +15,14 @@ const incidentTypes = [
     { value: "Natural Disaster", label: "Natural Disaster" },
     { value: "Other", label: "Other" }
 ];
+interface ReportFormProps {
+    onClose: () => void;
+    onSubmit: (addedEntry: ReportFormData) => void;
+}
 
 export function ReportForm({ onClose, onSubmit }: ReportFormProps ) {
     // State to manage form data
-    const [formData, setFormData] = useState<ReportFormData>({
+    const [formData, setFormData] = useState<ReportFormData>( {
         location: "",
         type: "",
         time: "",

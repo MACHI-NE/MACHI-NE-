@@ -10,9 +10,3 @@ export interface ReportFormData {
     coordinates: [number, number] | null;
     status: 'OPEN' | 'RESOLVED';
 }
-
-export interface ReportFormProps {
-    onClose: () => void;
-    onSubmit: (addedEntry : ReportFormData) => void;
-}
-
