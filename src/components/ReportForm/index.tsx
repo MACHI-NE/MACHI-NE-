@@ -48,6 +48,11 @@ export function ReportForm({ onClose, onSubmit }: ReportFormProps ) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Validate image URL
+        if (formData.image && !formData.image.match(/\.(jpeg|jpg|gif|png)$/)) {
+            alert("Please enter a valid image URL. It must be a JPEG, JPG, GIF, or PNG link.");
+            return;
+        }
         // Add report to store
         addReport(formData);
         onClose();
