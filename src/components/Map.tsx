@@ -109,7 +109,10 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
             icon={(report.coordinates == selectedCoord) ? greenIcon : blueIcon}
             eventHandlers={{ click: (e) => { e.target.openPopup(); } }}
           >
-            <Popup className='p-0 m-0'>
+            <Popup 
+              className='p-0 m-0'
+              keepInView={false}
+            >
               <div className="m-0 p-2 h-full w-full text-black cursor-pointer"
               onClick={() => onReportSelect(report)}>
               <h3><b>{report.type === 'Other' ? report.customType : report.type}</b></h3>
