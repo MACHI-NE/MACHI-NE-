@@ -4,7 +4,6 @@ import { FormInput } from './components/FormInput';
 import { ImageUpload } from './components/FormImageUpload';
 import { resetLocation, setSavedLocation } from './components/locationState';
 import type { ReportFormData } from '../../types';
-import { addReport } from '../../store/reportStore';
 import { LatLng } from 'leaflet';
 
 // Define incident types for the dropdown
@@ -68,8 +67,6 @@ export function ReportForm({ onClose, onSubmit, report }: ReportFormProps ) {
             alert("Please enter a valid image URL. It must be a JPEG, JPG, GIF, or PNG link.");
             return;
         }
-        // Add report to store
-        addReport(formData);
         onClose();
         onSubmit(formData);
     };

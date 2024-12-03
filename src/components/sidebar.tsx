@@ -3,6 +3,7 @@ import { ReportFormData } from "../types";
 import { ReportForm } from './ReportForm';
 import { EmergencyModal } from './EmergencyModal';
 import { useState } from "react";
+import { addReport } from '../store/reportStore';
 
 interface SidebarProps {
     viewableEventList: ReportFormData[];
@@ -20,7 +21,7 @@ enum SortingMode {
 
 const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onReportSelect, onReportAdd}) =>
 {
-    let displayedUIEvents: React.ReactElement[] = []; //list of UI objects
+    const displayedUIEvents: React.ReactElement[] = []; //list of UI objects
     let index : number = 1;
     const [showForm, setShowForm] = useState(false);
     const [showAll, setShowAll] = useState(true);
@@ -41,12 +42,13 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
     } 
     function refreshEventsList(emergencies:ReportFormData[]) //for handling list rerendering after map moves
     {
-        var prevRender : React.ReactElement[] = eventsList; //get array from last render
+        displayedUIEvents.length = 0; // Clear the array
+        const prevRender : React.ReactElement[] = eventsList; //get array from last render
         emergencies.forEach(emergency => { 
             displayedUIEvents.push(<EventUIObj emergency={emergency} key={index++}/>); //create new array
         });
         // if there was a change, rerender
-        var changeDetected : boolean = false;
+        let changeDetected : boolean = false;
         if (prevRender.length != displayedUIEvents.length) // if lengths are not equal, there was a change
             changeDetected = true;
         else //otherwise, lengths were equal, check each entry
@@ -63,7 +65,7 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
     }
     function toggleViewMode()
     {
-        var viewingAll : boolean = true;
+        let viewingAll : boolean = true;
         if (showAll)
             viewingAll = false;
         setShowAll(viewingAll);
@@ -83,7 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
     }
     function sortMostRecent(emergencies:ReportFormData[]) //sorts with most recent (latest) events at top of list
     {
-        let sortedEvents: ReportFormData[] = emergencies.slice();
+        const sortedEvents: ReportFormData[] = emergencies.slice();
         sortedEvents.sort((a, b) => 
             {
                 const timeA = new Date(a.time); //convert date string back into date objects
@@ -99,13 +101,13 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
     }
     function sortRegionAlpha(emergencies:ReportFormData[])
     {
-        let sortedEvents: ReportFormData[] = emergencies.slice();
+        const sortedEvents: ReportFormData[] = emergencies.slice();
         sortedEvents.sort((a, b) => 
             {
                 //sort by type name, in alphabetical 
                 if (a.location < b.location) 
                     return -1;
-                else if (a.location < b.location)
+                else if (a.location > b.location)
                     return 1;
                 return 0; 
             });
@@ -113,13 +115,13 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
     }
     function sortTypeAlpha(emergencies:ReportFormData[])
     {
-        let sortedEvents: ReportFormData[] = emergencies.slice();
+        const sortedEvents: ReportFormData[] = emergencies.slice();
         sortedEvents.sort((a, b) => 
             {
                 //sort by type name, in alphabetical 
                 if (a.type < b.type) 
                     return -1;
-                else if (a.type < b.type)
+                else if (a.type > b.type)
                     return 1;
                 return 0; 
             });
@@ -127,7 +129,7 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
     }
     function sortStatus(emergencies:ReportFormData[])
     {
-        let sortedEvents: ReportFormData[] = emergencies.slice();
+        const sortedEvents: ReportFormData[] = emergencies.slice();
         sortedEvents.sort((a, b) => 
             {
                 //sort by type name, in alphabetical 
@@ -201,13 +203,26 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
                     {eventsList}
                 </ul>
             </div>
-            {showForm && <ReportForm onClose={() => setShowForm(false)} onSubmit={(newEntry:ReportFormData) => addReportEvent(newEntry)}/>}
+            {showForm && <ReportForm onClose={() => setShowForm(false)} onSubmit={(newEntry: ReportFormData) => {
+                addReportEvent(newEntry) 
+                addReport(newEntry) 
+            }}/>}
             {selectedReport && (
                 <EmergencyModal
                     report={selectedReport}
-                    onClose={() => setSelectedReport(null)}
-                    onStatusUpdate={() => null}
-                    onReportRemove={() => null}
+                    onClose={() => {
+                        setSelectedReport(null);
+                        refreshEventsList(showAll ? totalEventList : viewableEventList);
+                    }}
+                    onStatusUpdate={(updatedReport, newStatus) => {
+                        setSelectedReport({...updatedReport, status: newStatus});
+                        refreshEventsList(showAll ? totalEventList : viewableEventList);
+                    }}
+                    onReportRemove={() => setSelectedReport(null)}
+                    onReportEdit={(oldReport, newReport) => {
+                        setSelectedReport(newReport);
+                        refreshEventsList(showAll ? totalEventList : viewableEventList);
+                    }}
                 />
             )}
         </div>

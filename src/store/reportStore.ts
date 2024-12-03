@@ -1,9 +1,6 @@
 import { ReportFormData } from "../types";
 
-let reports: ReportFormData[] = [];
-
 export const addReport = (report: ReportFormData) => {
-    reports = [...reports, report];
     const storedReports = getReports();
     storedReports.push(report);
     localStorage.setItem('reports', JSON.stringify(storedReports));
@@ -26,24 +23,23 @@ export const updateReportStatus = (report: ReportFormData, newStatus: 'OPEN' | '
     });
 
     localStorage.setItem('reports', JSON.stringify(updatedReports));
-    reports = updatedReports;
     return updatedReports;
 };
 
 export const editReport = (report: ReportFormData, newReport: ReportFormData) => {
     const storedReports = getReports();
-    const updatedReports = storedReports.map(r => {
-        if (r.coordinates?.[0] === report.coordinates?.[0] &&
+    console.log(storedReports);
+    console.log(report);    
+    const filteredReports = storedReports.filter(r =>
+        !(r.coordinates?.[0] === report.coordinates?.[0] &&
             r.coordinates?.[1] === report.coordinates?.[1] &&
-            r.time === report.time) {
-            return { ...r, ...newReport };
-        }
-        return r;
-    });
-
-    localStorage.setItem('reports', JSON.stringify(updatedReports));
-    reports = updatedReports;
-    return updatedReports;
+            r.time === report.time)
+    );
+    filteredReports.push(newReport);
+    
+    localStorage.setItem('reports', JSON.stringify(filteredReports));
+    console.log(filteredReports);
+    return filteredReports;
 };
 
 export const deleteReport = (report: ReportFormData) => {
@@ -55,6 +51,5 @@ export const deleteReport = (report: ReportFormData) => {
     );
 
     localStorage.setItem('reports', JSON.stringify(filteredReports));
-    reports = filteredReports;
     return filteredReports;
 };
