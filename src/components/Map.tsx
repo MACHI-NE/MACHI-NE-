@@ -81,7 +81,7 @@ const CenterMap: React.FC<{ selectedCoord: [number, number] | null }> = ({ selec
 
 
 const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, selectedCoord = null, setSelectedCoord, onReportSelect }) => {
-  var defaultPosition: [number, number] = [49.27694889810881, -122.91926811371421];
+  const defaultPosition: [number, number] = [49.27694889810881, -122.91926811371421];
   const zoomLevel: number = 8;
   return (
     <div className="MapComponent w-full h-full relative z-0">
@@ -112,7 +112,7 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
               e.target.openPopup(); 
               setSelectedCoord(report.coordinates)
             },
-            popupclose: (e) => {
+            popupclose: () => {
               setSelectedCoord(null)
             }
           }
@@ -120,8 +120,10 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
           >
             <Popup 
               className='p-0 m-0'
+              autoPan={false}
               keepInView={false}
-              eventHandlers={{ popupclose: (e) => {  
+              autoPanPadding={[0, 0]}
+              eventHandlers={{ popupclose: () => {  
                 setSelectedCoord(null)
             } }}
             >
