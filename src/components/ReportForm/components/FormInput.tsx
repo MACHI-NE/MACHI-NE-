@@ -2,21 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Map } from './FormMap';
 import { LatLng } from 'leaflet';
-
-// Temporary and saved locations storage
-let tempLocation: LatLng | null = null;
-let savedLocation: LatLng | null = null;
-
-// Function to set temporary location
-export const setTempLocation = (location: LatLng): void => {
-    tempLocation = location;
-}
-
-// Function to reset locations
-export const resetLocation = (): void => {
-    tempLocation = null;
-    savedLocation = null;
-}
+import { tempLocation, savedLocation, setSavedLocation } from './locationState';
 
 interface FormInputProps {
     id: string;
@@ -61,6 +47,17 @@ export function FormInput({
             setIsSaved(false);
         }
     }, [resetTrigger]);
+
+    useEffect(() => {
+        // Initialize saved location if coordinates exist in value
+        if (type === "map" && value) {
+            const [lat, lng] = value.split(',').map(Number);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                setIsSaved(true);
+                setSavedLocation(new LatLng(lat, lng));
+            }
+        }
+    }, [type, value]);
 
     // Modal component for map selection
     const MapModal = () => {
@@ -128,7 +125,9 @@ export function FormInput({
                             onClick={() => {
                                 setShowMap(false);
                                 setIsSaved(true);
-                                savedLocation = tempLocation;
+                                if (tempLocation) {
+                                    setSavedLocation(tempLocation);
+                                }
                                 if (tempLocation && onCoordinateChange) {
                                     onCoordinateChange({
                                         lat: tempLocation!.lat,

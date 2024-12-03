@@ -2,34 +2,30 @@ import React, { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import { LatLng } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { setTempLocation } from './FormInput';
+import { setTempLocation } from './locationState';
 
 // Custom hook to manage location state
-function useLocation(saved: boolean = false) {
-    const [location, setLocation] = useState<LatLng | null>(null);
+function useLocation(saved: boolean = false, initialCoords: LatLng) {
+    const [location, setLocation] = useState<LatLng>(initialCoords);
     const [hasRequestedLocation, setHasRequestedLocation] = useState(false);
     
-    // Event handlers for map
     const map = useMapEvents({
-        
-        // User location found
         locationfound: (e) => {
-
-            // Only use user location if not saved and no location set
-            if (!saved && !location) {
+            
+            // Only set location if not using saved coordinates
+            if (!saved) {
                 setLocation(e.latlng);
                 setTempLocation(e.latlng);
             }
         },
 
-        // Map clicked
         click: (e) => {
             setLocation(e.latlng);
             setTempLocation(e.latlng);
         }
     });
 
-    // Request location on first render only
+    // Only request location if not using saved coordinates
     React.useEffect(() => {
         if (!saved && !hasRequestedLocation) {
             map.locate();
@@ -37,20 +33,28 @@ function useLocation(saved: boolean = false) {
         }
     }, [map, saved, hasRequestedLocation]);
 
+    // Set initial coordinates
+    React.useEffect(() => {
+        if (saved) {
+            setLocation(initialCoords);
+            setTempLocation(initialCoords);
+        }
+    }, [saved, initialCoords]);
+
     return location;
 }
 
 // Component to render a marker on the map
 function LocationMarker({ coordinates, saved, locationText }: { coordinates: LatLng, saved: boolean, locationText?: string }) {
-    
-    // If no click or location found, default to coordinates (CMPT 272 lecture hall)
-    const location = useLocation(saved) || coordinates;
+    const location = useLocation(saved, coordinates);
     const map = useMap();
 
-    // Fly animation to location
+    // Always center on initial coordinates when saved
     React.useEffect(() => {
-        map.flyTo(location, map.getZoom());
-    }, [location, map]);
+        if (saved) {
+            map.setView(coordinates, map.getZoom());
+        }
+    }, [coordinates, map, saved]);
 
     return (
         <Marker position={location}>

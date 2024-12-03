@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import { FormInput, resetLocation } from './components/FormInput';
+import { FormInput } from './components/FormInput';
 import { ImageUpload } from './components/FormImageUpload';
+import { resetLocation, setSavedLocation } from './components/locationState';
 import type { ReportFormData } from '../../types';
-import { addReport } from '../../store/reportStore';
+import { LatLng } from 'leaflet';
 
 // Define incident types for the dropdown
 const incidentTypes = [
@@ -18,11 +19,12 @@ const incidentTypes = [
 interface ReportFormProps {
     onClose: () => void;
     onSubmit: (addedEntry: ReportFormData) => void;
+    report?: ReportFormData
 }
 
-export function ReportForm({ onClose, onSubmit }: ReportFormProps ) {
+export function ReportForm({ onClose, onSubmit, report }: ReportFormProps ) {
     // State to manage form data
-    const [formData, setFormData] = useState<ReportFormData>( {
+    const [formData, setFormData] = useState<ReportFormData>(report || {
         location: "",
         type: "",
         time: "",
@@ -38,6 +40,14 @@ export function ReportForm({ onClose, onSubmit }: ReportFormProps ) {
     const [resetCounter, setResetCounter] = useState(0);
     // State to manage animation for closing the form
     const [isAnimatingOut, setIsAnimatingOut] = useState(false);
+
+    // Initialize map with existing coordinates
+    useEffect(() => {
+        if (report?.coordinates) {
+            const [lat, lng] = report.coordinates;
+            setSavedLocation(new LatLng(lat, lng));
+        }
+    }, [report]);
 
     // Handle input changes
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -57,8 +67,6 @@ export function ReportForm({ onClose, onSubmit }: ReportFormProps ) {
             alert("Please enter a valid image URL. It must be a JPEG, JPG, GIF, or PNG link.");
             return;
         }
-        // Add report to store
-        addReport(formData);
         onClose();
         onSubmit(formData);
     };

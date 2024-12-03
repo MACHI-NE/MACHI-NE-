@@ -1,46 +1,63 @@
 import { X } from "lucide-react";
 import { ReportFormData } from "../types";
-import { useState } from "react";
-import { deleteReport, updateReportStatus } from "../store/reportStore";
+import { useState, useEffect } from "react";
+import { deleteReport, editReport, updateReportStatus, getStoredPassword } from "../store/reportStore";
+import { ReportForm } from "./ReportForm";
+import md5 from "md5";
 
 interface EmergencyModalProps {
     report: ReportFormData;
     onClose: () => void;
-    onStatusUpdate: (updatedEvent : ReportFormData, newStatus:'OPEN' | 'RESOLVED') => void;
-    onReportRemove: (reportToRemove:ReportFormData) => void;
+    onStatusUpdate: (updatedEvent: ReportFormData, newStatus: 'OPEN' | 'RESOLVED') => void;
+    onReportRemove: (reportToRemove: ReportFormData) => void;
+    onReportEdit: (oldReport: ReportFormData, newReport: ReportFormData) => void;
 }
 
-export function EmergencyModal({ report, onClose , onStatusUpdate, onReportRemove}: EmergencyModalProps) {
+export function EmergencyModal({ report, onClose, onStatusUpdate, onReportRemove, onReportEdit }: EmergencyModalProps) {
     console.log(report)
     const [isAnimatingOut, setIsAnimatingOut] = useState(false);
     const [status, setStatus] = useState<'OPEN' | 'RESOLVED'>(report.status || 'OPEN');
+    const [reportFormShowing, setReportFormShowing] = useState(false);
 
     const handleStatusToggle = () => {
         const newStatus = status === 'OPEN' ? 'RESOLVED' : 'OPEN';
+        const updatedReport: ReportFormData = { ...report, status: newStatus };
         setStatus(newStatus);
         updateReportStatus(report, newStatus);
-        onStatusUpdate(report, newStatus);
+        onStatusUpdate(updatedReport, newStatus);
     };
 
     // Password functions
     const [showPasswordInput, setShowPasswordInput] = useState(false);
     const [password, setPassword] = useState("");
-    const correctPassword = "temp";
-    const passwordRequest = () => {
-        setShowPasswordInput(true);
-    }
+    const [currentAction, setCurrentAction] = useState<'DELETE' | 'EDIT' | 'STATUSCHANGE' | null>(null);
+    const hashedCorrectPassword = getStoredPassword() || md5('temp');
+
+    useEffect(() => {
+        setStatus(report.status); // Sync the local state when the report changes
+    }, [report]);
+
     const handlePasswordSubmit = () => {
-        if (password === correctPassword) {
-            deleteReport(report);
-            alert("Report deleted successfully.");
-            onReportRemove(report);
-            onClose();
+        if (md5(password) === hashedCorrectPassword) {
+            if (currentAction === 'DELETE') {
+                deleteReport(report);
+                alert("Report deleted successfully.");
+                onReportRemove(report);
+                onClose();
+            } else if (currentAction === 'EDIT') {
+                setReportFormShowing(true);
+            }
+            else if (currentAction === 'STATUSCHANGE') {
+                handleStatusToggle();
+                alert("Status changed successfully.");
+            }
+            setPassword("");
+            setShowPasswordInput(false);
         } else {
             alert("Incorrect password. Please try again.");
             setPassword("");
         }
     };
-    
 
     const handleClose = () => {
         setIsAnimatingOut(true);
@@ -50,10 +67,20 @@ export function EmergencyModal({ report, onClose , onStatusUpdate, onReportRemov
         }, 190);
     };
 
+    const handleReportForm = () => {
+        if (reportFormShowing) { setReportFormShowing(false); }
+        else { setReportFormShowing(true); }
+    }
+    const onEditSubmit = (newReport: ReportFormData) => {
+        editReport(report, newReport);
+        onReportEdit(report, newReport);
+        handleReportForm();
+        alert("Report edited successfully.");
+    }
+
     return (
-        <div className={`modal-backdrop ${
-            isAnimatingOut ? 'animate-fade-out' : 'animate-fade-in'
-        }`}
+        <div className={`modal-backdrop ${isAnimatingOut ? 'animate-fade-out' : 'animate-fade-in'
+            }`}
             onClick={(e) => e.target === e.currentTarget && handleClose()}
         >
             <div className="modal-container">
@@ -68,51 +95,68 @@ export function EmergencyModal({ report, onClose , onStatusUpdate, onReportRemov
                             <div className="flex items-center gap-2">
                                 <span className="text-base font-semibold">Status:</span>
                                 <span
-                                    className={`px-2 py-1 text-base font-bold rounded border ${
-                                        status === 'OPEN'
-                                            ? 'bg-yellow-300 text-yellow-950 border-yellow-500'
-                                            : 'bg-green-500 text-green-950 border-green-700'
-                                    }`}
+                                    className={`px-2 py-1 text-base font-bold rounded border ${status === 'OPEN'
+                                        ? 'bg-yellow-300 text-yellow-950 border-yellow-500'
+                                        : 'bg-green-500 text-green-950 border-green-700'
+                                        }`}
                                 >
                                     {status}
                                 </span>
                                 <button
-                                    onClick={handleStatusToggle}
+                                    onClick={() => {
+                                        setCurrentAction('STATUSCHANGE');
+                                        setShowPasswordInput(true);
+                                    }}
                                     className="submit-btn text-base"
                                     type="button"
                                 >
                                     Mark as {status === 'OPEN' ? 'RESOLVED' : 'OPEN'}
                                 </button>
                                 <button
-                                    onClick={passwordRequest}
+                                    onClick={() => {
+                                        setCurrentAction('EDIT');
+                                        setShowPasswordInput(true);
+                                    }}
+                                    className="submit-btn text-base"
+                                    type="button">
+                                    Edit Report
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setCurrentAction('DELETE');
+                                        setShowPasswordInput(true);
+                                    }}
                                     className="delete-btn text-base"
                                     type="button"
                                 >
                                     Delete Report
                                 </button>
+
+
+                                {reportFormShowing && <ReportForm report={report} onClose={handleReportForm} onSubmit={onEditSubmit} />}
                             </div>
                         </div>
                     </>
                 ) : (
-                    <div className="password-container">
-                        <h1 className="modal-header">Enter Password to Delete Report</h1>
+                    <div className="password-container px-6 pb-3 pt-0">
+                        <h1 className="modal-header">Enter Password</h1>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="input-field border rounded px-4 py-2 mt-4 w-full"
+                            className="input-field border rounded px-4 py-2 mt-4 w-full bg-white"
                             placeholder="Enter Password"
                         />
                         <div className="flex justify-end gap-4 mt-4">
                             <button
                                 onClick={handlePasswordSubmit}
-                                className="submit-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                                className="submit-btn border-0"
                             >
                                 Submit
                             </button>
                             <button
                                 onClick={() => setShowPasswordInput(false)}
-                                className="cancel-btn bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400"
+                                className="cancel-btn border-0 bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400"
                             >
                                 Cancel
                             </button>
@@ -210,6 +254,8 @@ export function EmergencyModal({ report, onClose , onStatusUpdate, onReportRemov
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
+
     );
+
 }
