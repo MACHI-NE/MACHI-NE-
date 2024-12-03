@@ -221,7 +221,7 @@ const Sidebar: React.FC<SidebarProps> = ({ viewableEventList, totalEventList, on
                             onClick={() => setShowPasswordChange(true)}
                             className="w-full px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded"
                         >
-                            Change Admin Password
+                            Change Operator Password
                         </button>
                     ) : (
                         <div className="space-y-2">
