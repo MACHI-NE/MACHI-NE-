@@ -23,7 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
     let displayedUIEvents: React.ReactElement[] = []; //list of UI objects
     let index : number = 1;
     const [showForm, setShowForm] = useState(false);
-    const [showAll, setShowAll] = useState(true);
+    const [showAll, setShowAll] = useState(false);
     const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
     const [eventsList, setEventsList] = useState(displayedUIEvents);
     const [sortMod, setSortMod] = useState(SortingMode.Time);
@@ -172,10 +172,10 @@ const Sidebar: React.FC<SidebarProps> = ({viewableEventList, totalEventList, onR
                     onClick={() => setShowForm(!showForm)}>
                     {showForm ? "[-] Close Form" : "[+] Add Report"}
                 </button>
-
+                <p><strong>Toggle View Mode</strong></p>
                 <button
                     onClick={() => toggleViewMode()}>
-                    {showAll ? "Viewing All" : "Viewing Nearby"}
+                    {showAll ? "ALL" : "NEARBY"}
                 </button>
             
                 <p><strong>Sorting Options:</strong></p>
