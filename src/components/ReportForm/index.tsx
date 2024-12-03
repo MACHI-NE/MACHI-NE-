@@ -18,11 +18,12 @@ const incidentTypes = [
 interface ReportFormProps {
     onClose: () => void;
     onSubmit: (addedEntry: ReportFormData) => void;
+    report?: ReportFormData
 }
 
-export function ReportForm({ onClose, onSubmit }: ReportFormProps ) {
+export function ReportForm({ onClose, onSubmit, report }: ReportFormProps ) {
     // State to manage form data
-    const [formData, setFormData] = useState<ReportFormData>( {
+    const [formData, setFormData] = useState<ReportFormData>(report || {
         location: "",
         type: "",
         time: "",

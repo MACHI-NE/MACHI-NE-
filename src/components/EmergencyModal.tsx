@@ -1,19 +1,21 @@
 import { X } from "lucide-react";
 import { ReportFormData } from "../types";
 import { useState } from "react";
-import { deleteReport, updateReportStatus } from "../store/reportStore";
+import { deleteReport, editReport, updateReportStatus } from "../store/reportStore";
+import { ReportForm } from "./ReportForm";
 
 interface EmergencyModalProps {
     report: ReportFormData;
     onClose: () => void;
-    onStatusUpdate: (updatedEvent : ReportFormData, newStatus:'OPEN' | 'RESOLVED') => void;
-    onReportRemove: (reportToRemove:ReportFormData) => void;
+    onStatusUpdate: (updatedEvent: ReportFormData, newStatus: 'OPEN' | 'RESOLVED') => void;
+    onReportRemove: (reportToRemove: ReportFormData) => void;
 }
 
-export function EmergencyModal({ report, onClose , onStatusUpdate, onReportRemove}: EmergencyModalProps) {
+export function EmergencyModal({ report, onClose, onStatusUpdate, onReportRemove }: EmergencyModalProps) {
     console.log(report)
     const [isAnimatingOut, setIsAnimatingOut] = useState(false);
     const [status, setStatus] = useState<'OPEN' | 'RESOLVED'>(report.status || 'OPEN');
+    const [reportFormShowing, setReportFormShowing] = useState(false);
 
     const handleStatusToggle = () => {
         const newStatus = status === 'OPEN' ? 'RESOLVED' : 'OPEN';
@@ -40,7 +42,7 @@ export function EmergencyModal({ report, onClose , onStatusUpdate, onReportRemov
             setPassword("");
         }
     };
-    
+
 
     const handleClose = () => {
         setIsAnimatingOut(true);
@@ -50,10 +52,18 @@ export function EmergencyModal({ report, onClose , onStatusUpdate, onReportRemov
         }, 190);
     };
 
+    const handleReportForm = () => {
+        if (reportFormShowing) { setReportFormShowing(false); }
+        else { setReportFormShowing(true); }
+    }
+    const onEditSubmit = (newReport: ReportFormData) => {
+        console.log(newReport);
+        editReport(report, newReport);
+    }
+
     return (
-        <div className={`modal-backdrop ${
-            isAnimatingOut ? 'animate-fade-out' : 'animate-fade-in'
-        }`}
+        <div className={`modal-backdrop ${isAnimatingOut ? 'animate-fade-out' : 'animate-fade-in'
+            }`}
             onClick={(e) => e.target === e.currentTarget && handleClose()}
         >
             <div className="modal-container">
@@ -68,11 +78,10 @@ export function EmergencyModal({ report, onClose , onStatusUpdate, onReportRemov
                             <div className="flex items-center gap-2">
                                 <span className="text-base font-semibold">Status:</span>
                                 <span
-                                    className={`px-2 py-1 text-base font-bold rounded border ${
-                                        status === 'OPEN'
-                                            ? 'bg-yellow-300 text-yellow-950 border-yellow-500'
-                                            : 'bg-green-500 text-green-950 border-green-700'
-                                    }`}
+                                    className={`px-2 py-1 text-base font-bold rounded border ${status === 'OPEN'
+                                        ? 'bg-yellow-300 text-yellow-950 border-yellow-500'
+                                        : 'bg-green-500 text-green-950 border-green-700'
+                                        }`}
                                 >
                                     {status}
                                 </span>
@@ -90,6 +99,14 @@ export function EmergencyModal({ report, onClose , onStatusUpdate, onReportRemov
                                 >
                                     Delete Report
                                 </button>
+                                <button
+                                    onClick={handleReportForm}
+                                    className="cancel-btn text-base"
+                                    type="button">
+                                    Edit Report
+                                </button>
+
+                                {reportFormShowing && <ReportForm report={report} onClose={handleReportForm} onSubmit={onEditSubmit} />}
                             </div>
                         </div>
                     </>
