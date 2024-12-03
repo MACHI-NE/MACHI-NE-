@@ -2,7 +2,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { FormInput, resetLocation } from './components/FormInput';
 import { ImageUpload } from './components/FormImageUpload';
-import type { ReportFormProps, ReportFormData } from '../../types';
+import type { ReportFormData } from '../../types';
 import { addReport } from '../../store/reportStore';
 
 // Define incident types for the dropdown
@@ -179,17 +179,19 @@ export function ReportForm({ onClose, onSubmit }: ReportFormProps ) {
                                         placeholder="Enter name"
                                         value={formData.witnessName}
                                         onChange={handleChange}
+                                        required
 
                                     />
                                     {/* Witness contact input */}
                                     <FormInput
                                         id="witnessContact"
                                         name="witnessContact"
-                                        label="Contact Info:"
-                                        placeholder="Phone or email"
+                                        label="Phone Number:"
+                                        type="tel"
+                                        placeholder="Enter phone number (xxx-xxx-xxxx)"
                                         value={formData.witnessContact}
                                         onChange={handleChange}
-
+                                        required
                                     />
                                 </div>
                             </div>
