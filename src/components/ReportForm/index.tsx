@@ -186,9 +186,9 @@ export function ReportForm({ onClose, onSubmit }: ReportFormProps ) {
                                     <FormInput
                                         id="witnessContact"
                                         name="witnessContact"
-                                        label="Phone Number:"
+                                        label="Phone Number (xxx-xxx-xxxx):"
                                         type="tel"
-                                        placeholder="Enter phone number (xxx-xxx-xxxx)"
+                                        placeholder="Enter phone number"
                                         value={formData.witnessContact}
                                         onChange={handleChange}
                                         required
