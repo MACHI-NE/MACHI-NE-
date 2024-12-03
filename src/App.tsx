@@ -7,7 +7,6 @@ import Sidebar from "./components/sidebar"
 import { initializePassword } from './store/reportStore';
 
 export default function App() {
-  // Initialize password when app starts
   initializePassword();
 
   const [showForm, setShowForm] = useState(false);

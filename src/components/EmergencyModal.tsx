@@ -30,7 +30,6 @@ export function EmergencyModal({ report, onClose, onStatusUpdate, onReportRemove
     // Password functions
     const [showPasswordInput, setShowPasswordInput] = useState(false);
     const [password, setPassword] = useState("");
-    const correctPassword = "temp";
     const [currentAction, setCurrentAction] = useState<'DELETE' | 'EDIT' | 'STATUSCHANGE' | null>(null);
     const hashedCorrectPassword = getStoredPassword() || md5('temp');
 

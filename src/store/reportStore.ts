@@ -1,3 +1,4 @@
+import md5 from "md5";
 import { ReportFormData } from "../types";
 
 export const addReport = (report: ReportFormData) => {
@@ -56,13 +57,13 @@ export const deleteReport = (report: ReportFormData) => {
 
 export const initializePassword = () => {
     if (!localStorage.getItem('adminPassword')) {
-        // Set default password hash (for "temp")
-        localStorage.setItem('adminPassword', '9990775155c3518a0d7917f7780b24aa');
+        localStorage.setItem('adminPassword', md5('temp'));
     }
+    return localStorage.getItem('adminPassword');
 };
 
 export const getStoredPassword = () => {
-    return localStorage.getItem('adminPassword');
+    return localStorage.getItem('adminPassword') || initializePassword();
 };
 
 export const updatePassword = (newPasswordHash: string) => {
