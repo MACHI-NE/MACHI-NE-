@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import { FormInput, resetLocation } from './components/FormInput';
+import { FormInput } from './components/FormInput';
 import { ImageUpload } from './components/FormImageUpload';
+import { resetLocation, setSavedLocation } from './components/locationState';
 import type { ReportFormData } from '../../types';
 import { addReport } from '../../store/reportStore';
+import { LatLng } from 'leaflet';
 
 // Define incident types for the dropdown
 const incidentTypes = [
@@ -39,6 +41,14 @@ export function ReportForm({ onClose, onSubmit, report }: ReportFormProps ) {
     const [resetCounter, setResetCounter] = useState(0);
     // State to manage animation for closing the form
     const [isAnimatingOut, setIsAnimatingOut] = useState(false);
+
+    // Initialize map with existing coordinates
+    useEffect(() => {
+        if (report?.coordinates) {
+            const [lat, lng] = report.coordinates;
+            setSavedLocation(new LatLng(lat, lng));
+        }
+    }, [report]);
 
     // Handle input changes
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
