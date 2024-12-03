@@ -51,8 +51,8 @@ export default function App() {
     totalEvents = getReports();
     setTotEvents(totalEvents);
     // update visible
-    var oldIndex = visEvents.indexOf(updateEvent, 0); //get index of old entry in unrefreshed visible events
-    var newEntry : ReportFormData = { //create new copy if updated status
+    const oldIndex = visEvents.indexOf(updateEvent, 0); //get index of old entry in unrefreshed visible events
+    const newEntry : ReportFormData = { //create new copy if updated status
       location: updateEvent.location,
       type: updateEvent.type,
       time: updateEvent.time,

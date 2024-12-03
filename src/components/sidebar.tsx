@@ -215,7 +215,7 @@ const Sidebar: React.FC<SidebarProps> = ({ viewableEventList, totalEventList, on
                 </ul>
 
                 {/* Add password change section at bottom */}
-                <div className="mt-4 pt-4 border-t  border-gray-300">
+                <div className="mt-4 pt-4 border-t border-gray-300">
                     {!showPasswordChange ? (
                         <button
                             onClick={() => setShowPasswordChange(true)}
