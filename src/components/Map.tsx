@@ -28,6 +28,7 @@ interface MainMapProps {
   eventReportList: ReportFormData[];
   setVisiblePoints: (visiblePoints: ReportFormData[]) => void;
   selectedCoord: [number, number] | null;
+  setSelectedCoord: (coord: [number,number]| null) => void;
   onReportSelect: (report: ReportFormData) => void;
 }
 
@@ -79,9 +80,9 @@ const CenterMap: React.FC<{ selectedCoord: [number, number] | null }> = ({ selec
 
 
 
-const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, selectedCoord = null, onReportSelect }) => {
+const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, selectedCoord = null, setSelectedCoord, onReportSelect }) => {
   var defaultPosition: [number, number] = [49.27694889810881, -122.91926811371421];
-  const zoomLevel: number = 13;
+  const zoomLevel: number = 8;
   return (
     <div className="MapComponent w-full h-full relative z-0">
       <MapContainer
@@ -107,11 +108,22 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
             key={index}
             position={report.coordinates}
             icon={(report.coordinates == selectedCoord) ? greenIcon : blueIcon}
-            eventHandlers={{ click: (e) => { e.target.openPopup(); } }}
+            eventHandlers={{ click: (e) => { 
+              e.target.openPopup(); 
+              setSelectedCoord(report.coordinates)
+            },
+            popupclose: (e) => {
+              setSelectedCoord(null)
+            }
+          }
+          }
           >
             <Popup 
               className='p-0 m-0'
               keepInView={false}
+              eventHandlers={{ popupclose: (e) => {  
+                setSelectedCoord(null)
+            } }}
             >
               <div className="m-0 p-2 h-full w-full text-black cursor-pointer"
               onClick={() => onReportSelect(report)}>
