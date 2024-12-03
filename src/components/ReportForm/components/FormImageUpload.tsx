@@ -7,9 +7,9 @@ interface ImageUploadProps {
 }
 
 export const ImageUpload: React.FC<ImageUploadProps> = ({ formData, setFormData }) => (
-    <div className={`form-field ${!formData.image ? "md:my-auto" : "flex-1 flex flex-col min-h-0"}`}>
+    <div className={`form-field ${!(formData.image && formData.image.match(/\.(jpeg|jpg|gif|png)$/)) ? "md:my-auto" : "flex-1 flex flex-col min-h-0"}`}>
         <label htmlFor="image" className="form-label">Image URL:</label>
-        
+
         <input
             type="text"
             id="image"
@@ -25,7 +25,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ formData, setFormData 
             }}
         />
 
-        {formData.image && (
+        {formData.image && formData.image.match(/\.(jpeg|jpg|gif|png)$/) && (
             <div className="flex-1 mt-3 min-h-0">
                 <img
                     src={formData.image}

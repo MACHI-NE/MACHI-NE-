@@ -118,11 +118,11 @@ export function FormInput({
                     </button>
                     <div className="h-full w-full flex flex-col items-center justify-center gap-3">
                         <h1 className="text-xl text-center font-bold">Choose Location on Map</h1>
-                        <Map 
-                            coordinates={savedLocation || new LatLng(49.27834103633773, -122.91735596301538)} 
+                        <Map
+                            coordinates={savedLocation || new LatLng(49.27834103633773, -122.91735596301538)}
                             saved={isSaved}
                             locationText={name === 'coordinates' ? (document.getElementById('location') as HTMLInputElement)?.value : undefined}
-                            
+
                         />
                         <button
                             onClick={() => {
@@ -174,7 +174,7 @@ export function FormInput({
                             </option>
                         ))}
                     </select>
-                ) : (
+                ) : (type !== "tel" ?
                     <input
                         id={id}
                         type={type}
@@ -184,6 +184,17 @@ export function FormInput({
                         onChange={onChange}
                         value={value}
                         required={required}
+                    /> :
+                    <input
+                        id={id}
+                        type={type}
+                        name={name}
+                        placeholder={placeholder}
+                        className={inputClasses}
+                        onChange={onChange}
+                        value={value}
+                        required={required}
+                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                     />
                 )
                 :
@@ -194,7 +205,7 @@ export function FormInput({
                         className="sr-only absolute inset-0 w-full h-full"
                         required={required}
                         defaultValue={savedLocation ? 'valid' : ''}
-                        onChange={() => {}}  // Add empty onChange handler
+                        onChange={() => { }}  // Add empty onChange handler
                         aria-hidden="true"
                     />
                     <button

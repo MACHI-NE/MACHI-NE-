@@ -2,7 +2,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { FormInput, resetLocation } from './components/FormInput';
 import { ImageUpload } from './components/FormImageUpload';
-import type { ReportFormProps, ReportFormData } from '../../types';
+import type { ReportFormData } from '../../types';
 import { addReport } from '../../store/reportStore';
 
 // Define incident types for the dropdown
@@ -15,10 +15,14 @@ const incidentTypes = [
     { value: "Natural Disaster", label: "Natural Disaster" },
     { value: "Other", label: "Other" }
 ];
+interface ReportFormProps {
+    onClose: () => void;
+    onSubmit: (addedEntry: ReportFormData) => void;
+}
 
 export function ReportForm({ onClose, onSubmit }: ReportFormProps ) {
     // State to manage form data
-    const [formData, setFormData] = useState<ReportFormData>({
+    const [formData, setFormData] = useState<ReportFormData>( {
         location: "",
         type: "",
         time: "",
@@ -48,6 +52,11 @@ export function ReportForm({ onClose, onSubmit }: ReportFormProps ) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Validate image URL
+        if (formData.image && !formData.image.match(/\.(jpeg|jpg|gif|png)$/)) {
+            alert("Please enter a valid image URL. It must be a JPEG, JPG, GIF, or PNG link.");
+            return;
+        }
         // Add report to store
         addReport(formData);
         onClose();
@@ -170,17 +179,19 @@ export function ReportForm({ onClose, onSubmit }: ReportFormProps ) {
                                         placeholder="Enter name"
                                         value={formData.witnessName}
                                         onChange={handleChange}
+                                        required
 
                                     />
                                     {/* Witness contact input */}
                                     <FormInput
                                         id="witnessContact"
                                         name="witnessContact"
-                                        label="Contact Info:"
-                                        placeholder="Phone or email"
+                                        label="Phone Number (xxx-xxx-xxxx):"
+                                        type="tel"
+                                        placeholder="Enter phone number"
                                         value={formData.witnessContact}
                                         onChange={handleChange}
-
+                                        required
                                     />
                                 </div>
                             </div>
