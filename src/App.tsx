@@ -119,6 +119,7 @@ export default function App() {
           refreshVisibleEvents(lis)
         }}
         selectedCoord={selectCoord}
+        setSelectedCoord={setSelectCoord}
         onReportSelect={setSelectedReport}
       />
       {showForm && <ReportForm onClose={() => setShowForm(false)} onSubmit={(newEntry:ReportFormData) => addReportEvent(newEntry)}/>}
