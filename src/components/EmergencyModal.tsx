@@ -1,8 +1,9 @@
 import { X } from "lucide-react";
 import { ReportFormData } from "../types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { deleteReport, editReport, updateReportStatus } from "../store/reportStore";
 import { ReportForm } from "./ReportForm";
+import md5 from "md5";
 
 interface EmergencyModalProps {
     report: ReportFormData;
@@ -28,21 +29,34 @@ export function EmergencyModal({ report, onClose, onStatusUpdate, onReportRemove
     const [showPasswordInput, setShowPasswordInput] = useState(false);
     const [password, setPassword] = useState("");
     const correctPassword = "temp";
+    const [currentAction, setCurrentAction] = useState<'DELETE' | 'EDIT' | null>(null);
     const passwordRequest = () => {
         setShowPasswordInput(true);
     }
+    const hashedCorrectPassword = md5(correctPassword);
+    const hashedInput = md5(password);
+
+    useEffect(() => {
+        setStatus(report.status); // Sync the local state when the report changes
+    }, [report]);
+
     const handlePasswordSubmit = () => {
-        if (password === correctPassword) {
-            deleteReport(report);
-            alert("Report deleted successfully.");
-            onReportRemove(report);
-            onClose();
+        if (md5(password) === hashedCorrectPassword) {
+            if (currentAction === 'DELETE') {
+                deleteReport(report);
+                alert("Report deleted successfully.");
+                onReportRemove(report);
+                onClose();
+            } else if (currentAction === 'EDIT') {
+                setReportFormShowing(true);
+            }
+            setPassword("");
+            setShowPasswordInput(false);
         } else {
             alert("Incorrect password. Please try again.");
             setPassword("");
         }
     };
-
 
     const handleClose = () => {
         setIsAnimatingOut(true);
@@ -58,7 +72,11 @@ export function EmergencyModal({ report, onClose, onStatusUpdate, onReportRemove
     }
     const onEditSubmit = (newReport: ReportFormData) => {
         console.log(newReport);
+        alert("Report edited successfully.");
         editReport(report, newReport);
+        handleReportForm();
+        onStatusUpdate(newReport, newReport.status);
+        onClose(); 
     }
 
     return (
@@ -93,14 +111,20 @@ export function EmergencyModal({ report, onClose, onStatusUpdate, onReportRemove
                                     Mark as {status === 'OPEN' ? 'RESOLVED' : 'OPEN'}
                                 </button>
                                 <button
-                                    onClick={passwordRequest}
+                                    onClick={() => {
+                                        setCurrentAction('DELETE');
+                                        setShowPasswordInput(true);
+                                    }}
                                     className="delete-btn text-base"
                                     type="button"
                                 >
                                     Delete Report
                                 </button>
                                 <button
-                                    onClick={handleReportForm}
+                                    onClick={() => {
+                                        setCurrentAction('EDIT');
+                                        setShowPasswordInput(true);
+                                    }}
                                     className="cancel-btn text-base"
                                     type="button">
                                     Edit Report
@@ -112,7 +136,7 @@ export function EmergencyModal({ report, onClose, onStatusUpdate, onReportRemove
                     </>
                 ) : (
                     <div className="password-container">
-                        <h1 className="modal-header">Enter Password to Delete Report</h1>
+                        <h1 className="modal-header">Enter Password to Edit</h1>
                         <input
                             type="password"
                             value={password}
@@ -228,5 +252,7 @@ export function EmergencyModal({ report, onClose, onStatusUpdate, onReportRemove
                 </div>
             </div>
         </div>
+        
     );
+    
 }
