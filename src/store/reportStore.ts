@@ -53,3 +53,18 @@ export const deleteReport = (report: ReportFormData) => {
     localStorage.setItem('reports', JSON.stringify(filteredReports));
     return filteredReports;
 };
+
+export const initializePassword = () => {
+    if (!localStorage.getItem('adminPassword')) {
+        // Set default password hash (for "temp")
+        localStorage.setItem('adminPassword', '9990775155c3518a0d7917f7780b24aa');
+    }
+};
+
+export const getStoredPassword = () => {
+    return localStorage.getItem('adminPassword');
+};
+
+export const updatePassword = (newPasswordHash: string) => {
+    localStorage.setItem('adminPassword', newPasswordHash);
+};

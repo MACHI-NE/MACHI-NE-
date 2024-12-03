@@ -4,24 +4,12 @@ import { ReportForm } from "./components/ReportForm/index.tsx";
 import { ReportFormData } from "./types.ts";
 import { EmergencyModal } from "./components/EmergencyModal";
 import Sidebar from "./components/sidebar"
-// import MainMap from "./components/Map"
-// import React from "react";
-// import { Routes, Route } from "react-router-dom";
-// import Register from "./register";
-// import Login from "./login";
+import { initializePassword } from './store/reportStore';
 
-// const App: React.FC = () => {
-//   return (
-//     <Routes>
-//       <Route path="/" element={<Login />} />
-//       <Route path="register" element={<Register />} />
-//       <Route path="login" element={<Login />} />
-//     </Routes>
-//   );
-// };
-
-// export default App;
 export default function App() {
+  // Initialize password when app starts
+  initializePassword();
+
   const [showForm, setShowForm] = useState(false);
   const [selectedReport, setSelectedReport] = useState<ReportFormData | null>(null);
   let totalEvents: ReportFormData[] = localStorage.getItem('reports') ? JSON.parse(localStorage.getItem('reports') || '[]') : testingList;

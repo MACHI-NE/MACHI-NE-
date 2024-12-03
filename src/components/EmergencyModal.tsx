@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import { ReportFormData } from "../types";
 import { useState, useEffect } from "react";
-import { deleteReport, editReport, updateReportStatus } from "../store/reportStore";
+import { deleteReport, editReport, updateReportStatus, getStoredPassword } from "../store/reportStore";
 import { ReportForm } from "./ReportForm";
 import md5 from "md5";
 
@@ -32,7 +32,7 @@ export function EmergencyModal({ report, onClose, onStatusUpdate, onReportRemove
     const [password, setPassword] = useState("");
     const correctPassword = "temp";
     const [currentAction, setCurrentAction] = useState<'DELETE' | 'EDIT' | 'STATUSCHANGE' | null>(null);
-    const hashedCorrectPassword = md5(correctPassword);
+    const hashedCorrectPassword = getStoredPassword() || md5('temp');
 
     useEffect(() => {
         setStatus(report.status); // Sync the local state when the report changes
