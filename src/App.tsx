@@ -121,7 +121,6 @@ export default function App() {
       <MainMap
         eventReportList={totEvents}
         setVisiblePoints={(lis) => {
-          console.clear()
           refreshVisibleEvents(lis)
         }}
         selectedCoord={selectCoord}
