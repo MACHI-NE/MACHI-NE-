@@ -104,20 +104,24 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         {eventReportList.map((report, index) => report.coordinates ? (
-          <Marker
+            <Marker
             key={index}
             position={report.coordinates}
             icon={(report.coordinates == selectedCoord) ? greenIcon : blueIcon}
-            eventHandlers={{ click: (e) => { 
-              e.target.openPopup(); 
+            ref={(markerRef) => {
+              if (report.coordinates == selectedCoord && markerRef) {
+              markerRef.openPopup();
+              }
+            }}
+            eventHandlers={{ 
+              click: () => { 
               setSelectedCoord(report.coordinates)
-            },
-            popupclose: () => {
+              },
+              popupclose: () => {
               setSelectedCoord(null)
-            }
-          }
-          }
-          >
+              }
+            }}
+            >
             <Popup 
               className='p-0 m-0'
               autoPan={false}
