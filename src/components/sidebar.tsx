@@ -179,43 +179,41 @@ const Sidebar: React.FC<SidebarProps> = ({ viewableEventList, totalEventList, on
     // sort by most recent
     return (
         <div>
-            <div className="sidebar-component flex justify-between flex-col">
+            <div className="sidebar-component ">
                 <div>
-                    <p><strong>MACHI(NE) Emergency System</strong></p>
-                    <button
-                        onClick={() => setShowForm(!showForm)}>
-                        {showForm ? "[-] Close Form" : "[+] Add Report"}
-                    </button>
-                    <p><strong>Toggle View Mode</strong></p>
-                    <button
-                        onClick={() => toggleViewMode()}>
-                        {showAll ? "ALL" : "NEARBY"}
-                    </button>
-                    <p><strong>Sorting Options:</strong></p>
-                    <button
-                        onClick={() => updateSort(SortingMode.Time)}>
-                        {sortMod == SortingMode.Time ? "⏷ Time" : "- Time"}
-                    </button>
-                    <button
-                        onClick={() => updateSort(SortingMode.Region)}>
-                        {sortMod == SortingMode.Region ? "⏷ Region" : "- Region"}
-                    </button>
-                    <button
-                        onClick={() => updateSort(SortingMode.Type)}>
-                        {sortMod == SortingMode.Type ? "⏷ Type" : "- Type"}
-                    </button>
-                    <button
-                        onClick={() => updateSort(SortingMode.Status)}>
-                        {sortMod == SortingMode.Status ? "⏷ Status" : "- Status"}
-                    </button>
-                    <p><strong>-- Emergency Reports --</strong></p>
-                    <ul>
-                        {eventsList}
-                    </ul>
+                    <div className="controls-section">
+                        <p><strong>MACHI(NE) Emergency System</strong></p>
+                        <button onClick={() => setShowForm(!showForm)}>
+                            {showForm ? "[-] Close Form" : "[+] Add Report"}
+                        </button>
+                        <p><strong>Toggle View Mode</strong></p>
+                        <button onClick={() => toggleViewMode()}>
+                            {showAll ? "ALL" : "NEARBY"}
+                        </button>
+                        <p><strong>Sorting Options:</strong></p>
+                        <button onClick={() => updateSort(SortingMode.Time)}>
+                            {sortMod == SortingMode.Time ? "⏷ Time" : "- Time"}
+                        </button>
+                        <button onClick={() => updateSort(SortingMode.Region)}>
+                            {sortMod == SortingMode.Region ? "⏷ Region" : "- Region"}
+                        </button>
+                        <button onClick={() => updateSort(SortingMode.Type)}>
+                            {sortMod == SortingMode.Type ? "⏷ Type" : "- Type"}
+                        </button>
+                        <button onClick={() => updateSort(SortingMode.Status)}>
+                            {sortMod == SortingMode.Status ? "⏷ Status" : "- Status"}
+                        </button>
+                    </div>
+                    <div className="events-section">
+                        <p><strong>-- Emergency Reports --</strong></p>
+                        <ul>
+                            {eventsList}
+                        </ul>
+                    </div>
                 </div>
 
                 {/* Add password change section at bottom */}
-                <div className="mt-4 pt-4">
+                <div>
                     {!showPasswordChange ? (
                         <button
                             onClick={() => setShowPasswordChange(true)}
