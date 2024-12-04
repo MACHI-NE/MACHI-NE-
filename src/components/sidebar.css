@@ -39,6 +39,6 @@
 .sidebar-component ul {
     padding-right: 10px;
     margin: 10px;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
 }

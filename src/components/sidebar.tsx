@@ -277,7 +277,7 @@ const Sidebar: React.FC<SidebarProps> = ({ viewableEventList, totalEventList, on
                         refreshEventsList(showAll ? totalEventList : viewableEventList);
                     }}
                     onReportRemove={() => setSelectedReport(null)}
-                    onReportEdit={(oldReport, newReport) => {
+                    onReportEdit={(_oldReport, newReport) => {
                         setSelectedReport(newReport);
                         refreshEventsList(showAll ? totalEventList : viewableEventList);
                     }}
