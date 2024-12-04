@@ -47,14 +47,14 @@ function useLocation(saved: boolean = false, initialCoords: LatLng) {
 // Component to render a marker on the map
 function LocationMarker({ coordinates, saved, locationText }: { coordinates: LatLng, saved: boolean, locationText?: string }) {
     const location = useLocation(saved, coordinates);
+    if (location === coordinates) {
+        setTempLocation(coordinates);
+    }
     const map = useMap();
 
-    // Always center on initial coordinates when saved
     React.useEffect(() => {
-        if (saved) {
-            map.setView(coordinates, map.getZoom());
-        }
-    }, [coordinates, map, saved]);
+            map.setView(location, map.getZoom());
+    }, [map, location]);
 
     return (
         <Marker position={location}>

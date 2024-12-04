@@ -12,6 +12,9 @@
     float:left;
     position: absolute;
     z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
 }
 
 .sidebar-component button {
@@ -20,7 +23,6 @@
     padding: 5px;
     color: white;
     background-color:rgb(100 116 139);
-    max-width: 320px;
 }
 
 .sidebar-component button:hover {
@@ -32,14 +34,70 @@
     width: 100%;
     white-space: normal;
     word-wrap: break-word;
-    max-width: 320px;
     overflow-wrap: break-word;
 }
 
 .sidebar-component ul {
-    height: 50%;
     padding-right: 10px;
     margin: 10px;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
+    max-height: calc(100vh - 330px);
+}
+
+.sidebar-component ul.password-change-shown {
+    max-height: calc(100vh - 410px);
+}
+
+@media (max-width: 768px) {
+    .sidebar-component {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-width: 100%;
+        min-width: 100%;
+        height: max-content;
+        float: none;
+        overflow-y: auto;
+        font-size: x-small;
+        padding: 5px;
+    }
+    .sidebar-component button {
+        margin: 2px;
+        margin-top: 10px;
+        padding: 2px;
+    }
+    .sidebar-component > div:first-child {
+        display: flex;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .sidebar-component .controls-section {
+        flex: 1;
+        min-width: 0;
+        border-right: 2px solid rgb(100 116 139);
+        padding-right: 10px;
+    }
+
+    .sidebar-component .events-section {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        max-height: 20vh;
+    }
+
+    .sidebar-component ul {
+        flex: 1;
+        overflow-y: auto;
+        margin: 5px;
+        padding: 5px;
+    }
+
+    .sidebar-component .border-t {
+        padding-top: 0px;
+    }
 }

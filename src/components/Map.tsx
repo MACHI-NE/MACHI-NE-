@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MapContainer, ZoomControl, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { ReportFormData } from '../types';
 import { useMap } from 'react-leaflet';
-import { useEffect } from 'react';
 
 const greenIcon = L.icon({
   iconUrl: 'src/components/greenMarker.svg',
@@ -28,7 +27,7 @@ interface MainMapProps {
   eventReportList: ReportFormData[];
   setVisiblePoints: (visiblePoints: ReportFormData[]) => void;
   selectedCoord: [number, number] | null;
-  setSelectedCoord: (coord: [number,number]| null) => void;
+  setSelectedCoord: (coord: [number, number] | null) => void;
   onReportSelect: (report: ReportFormData) => void;
 }
 
@@ -37,28 +36,29 @@ interface MainMapProps {
 // function MapEvents takes in List of reports and func for visible points
 const MapEvents: React.FC<{ eventReportList: ReportFormData[]; setVisiblePoints: (visiblePoints: ReportFormData[]) => void }>
   = ({ eventReportList, setVisiblePoints }) => {
+    const initialLoadRef = React.useRef(true);
 
     const map = useMapEvents({
-      // When the view changes
       moveend: () => {
         const bounds = map.getBounds();
         const visiblePoints = eventReportList.filter((report) => {
           return report.coordinates && bounds.contains(L.latLng(report.coordinates))
-        }
-        );
-        setVisiblePoints(visiblePoints);
-      },
-
-      // When the component itself loads
-      load: () => {
-        const bounds = map.getBounds();
-        const visiblePoints = eventReportList.filter((report) => {
-          return report.coordinates && bounds.contains(L.latLng(report.coordinates))
-        }
-        );
+        });
         setVisiblePoints(visiblePoints);
       }
     });
+
+    useEffect(() => {
+      // Check if map is ready and we haven't done initial load
+      if (map && initialLoadRef.current) {
+        const bounds = map.getBounds();
+        const visiblePoints = eventReportList.filter((report) => {
+          return report.coordinates && bounds.contains(L.latLng(report.coordinates))
+        });
+        setVisiblePoints(visiblePoints);
+        initialLoadRef.current = false;
+      }
+    }, [map, eventReportList, setVisiblePoints]);
 
     return null;
   };
@@ -81,8 +81,8 @@ const CenterMap: React.FC<{ selectedCoord: [number, number] | null }> = ({ selec
 
 
 const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, selectedCoord = null, setSelectedCoord, onReportSelect }) => {
-  const defaultPosition: [number, number] = [49.27694889810881, -122.91926811371421];
-  const zoomLevel: number = 8;
+  const defaultPosition: [number, number] = [49.17, -122.94];
+  const zoomLevel: number = 10.3;
   return (
     <div className="MapComponent w-full h-full relative z-0">
       <MapContainer
@@ -91,7 +91,7 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
         zoomControl={false}
         className='w-screen h-screen z-0'
       >
-        <ZoomControl position="bottomright"/>
+        <ZoomControl position="topright"/>
         {/* deals with when the map moves, to call setVisiblePoints*/}
         <MapEvents
           eventReportList={eventReportList}
@@ -104,40 +104,42 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         {eventReportList.map((report, index) => report.coordinates ? (
-            <Marker
+          <Marker
             key={index}
             position={report.coordinates}
             icon={(report.coordinates == selectedCoord) ? greenIcon : blueIcon}
             ref={(markerRef) => {
               if (report.coordinates == selectedCoord && markerRef) {
-              markerRef.openPopup();
+                markerRef.openPopup();
               }
             }}
-            eventHandlers={{ 
-              click: () => { 
-              setSelectedCoord(report.coordinates)
+            eventHandlers={{
+              click: () => {
+                setSelectedCoord(report.coordinates)
               },
               popupclose: () => {
-              setSelectedCoord(null)
+                setSelectedCoord(null)
               }
             }}
-            >
-            <Popup 
+          >
+            <Popup
               className='p-0 m-0'
               autoPan={false}
               keepInView={false}
               autoPanPadding={[0, 0]}
-              eventHandlers={{ popupclose: () => {  
-                setSelectedCoord(null)
-            } }}
+              eventHandlers={{
+                popupclose: () => {
+                  setSelectedCoord(null)
+                }
+              }}
             >
               <div className="m-0 p-2 h-full w-full text-black cursor-pointer"
-              onClick={() => onReportSelect(report)}>
-              <h3><b>{report.type === 'Other' ? report.customType : report.type}</b></h3>
-              <p className="text-sm text-gray-600">
-                {new Date(report.time).toLocaleString()} • {report.status}
-              </p>
-              <p className="text-xs text-blue-600 mt-1">Click for more details</p>
+                onClick={() => onReportSelect(report)}>
+                <h3><b>{report.type === 'Other' ? report.customType : report.type}</b></h3>
+                <p className="text-sm text-gray-600">
+                  {new Date(report.time).toLocaleString()} • {report.status}
+                </p>
+                <p className="text-xs text-blue-600 mt-1">Click for more details</p>
               </div>
             </Popup>
           </Marker>

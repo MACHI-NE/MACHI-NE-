@@ -22,9 +22,13 @@ interface ReportFormProps {
     report?: ReportFormData
 }
 
-export function ReportForm({ onClose, onSubmit, report }: ReportFormProps ) {
+export function ReportForm({ onClose, onSubmit, report }: ReportFormProps) {
     // State to manage form data
-    const [formData, setFormData] = useState<ReportFormData>(report || {
+    const [formData, setFormData] = useState<ReportFormData>(report ? {
+        ...report,
+        // Convert ISO string to local datetime-local format
+        time: report.time ? new Date(report.time).toISOString().slice(0, 16) : ""
+    } : {
         location: "",
         type: "",
         time: "",
@@ -67,8 +71,17 @@ export function ReportForm({ onClose, onSubmit, report }: ReportFormProps ) {
             alert("Please enter a valid image URL. It must be a JPEG, JPG, GIF, or PNG link.");
             return;
         }
-        onClose();
-        onSubmit(formData);
+
+        // Set current time if this is a new report
+        const submissionData = !report ? {
+            ...formData,
+            time: new Date().toISOString()
+        } : formData;
+
+        resetLocation();
+        setResetCounter(prev => prev + 1);
+        onSubmit(submissionData);
+        handleClose();
     };
 
     // Handle coordinate changes from the map
@@ -168,16 +181,18 @@ export function ReportForm({ onClose, onSubmit, report }: ReportFormProps ) {
                                     )}
                                 </div>
 
-                                {/* Time input */}
-                                <FormInput
-                                    id="time"
-                                    name="time"
-                                    type="datetime-local"
-                                    label="Time:"
-                                    value={formData.time}
-                                    onChange={handleChange}
-                                    required
-                                />
+                                {/* Only show time input when editing an existing report */}
+                                {report && (
+                                    <FormInput
+                                        id="time"
+                                        name="time"
+                                        type="datetime-local"
+                                        label="Override Time (Operator Edit Only):"
+                                        value={formData.time}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                )}
                                 <div className="flex gap-3">
                                     {/* Witness name input */}
                                     <FormInput

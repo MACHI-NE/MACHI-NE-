@@ -123,16 +123,19 @@ export function FormInput({
                         />
                         <button
                             onClick={() => {
-                                setShowMap(false);
-                                setIsSaved(true);
-                                if (tempLocation) {
+                                if (tempLocation) {  // Only proceed if tempLocation exists
+                                    console.log(tempLocation);
+                                    setShowMap(false);
+                                    setIsSaved(true);
                                     setSavedLocation(tempLocation);
-                                }
-                                if (tempLocation && onCoordinateChange) {
-                                    onCoordinateChange({
-                                        lat: tempLocation!.lat,
-                                        lng: tempLocation!.lng
-                                    });
+                                    if (onCoordinateChange) {
+                                        onCoordinateChange({
+                                            lat: tempLocation.lat,
+                                            lng: tempLocation.lng
+                                        });
+                                    }
+                                } else {
+                                    alert('Please select a location on the map first');
                                 }
                             }}
                             className="submit-btn">

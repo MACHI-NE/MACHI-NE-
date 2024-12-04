@@ -179,43 +179,40 @@ const Sidebar: React.FC<SidebarProps> = ({ viewableEventList, totalEventList, on
     // sort by most recent
     return (
         <div>
-            <div className="sidebar-component">
-                <p><strong>MACHI(NE) Emergency System</strong></p>
-                <button
-                    onClick={() => setShowForm(!showForm)}>
-                    {showForm ? "[-] Close Form" : "[+] Add Report"}
-                </button>
-                <p><strong>Toggle View Mode</strong></p>
-                <button
-                    onClick={() => toggleViewMode()}>
-                    {showAll ? "ALL" : "NEARBY"}
-                </button>
+            <div className="sidebar-component ">
+                <div>
+                    <div className="controls-section">
+                        <p><strong>MACHI(NE) Emergency System</strong></p>
+                        <button onClick={() => setShowForm(!showForm)}>
+                            {showForm ? "[-] Close Form" : "[+] Add Report"}
+                        </button>
+                        <p><strong>Toggle View Mode</strong></p>
+                        <button onClick={() => toggleViewMode()}>
+                            {showAll ? "ALL" : "NEARBY"}
+                        </button>
+                        <p><strong>Sorting Options:</strong></p>
+                        <button onClick={() => updateSort(SortingMode.Time)}>
+                            {sortMod == SortingMode.Time ? "⏷ Time" : "- Time"}
+                        </button>
+                        <button onClick={() => updateSort(SortingMode.Region)}>
+                            {sortMod == SortingMode.Region ? "⏷ Region" : "- Region"}
+                        </button>
+                        <button onClick={() => updateSort(SortingMode.Type)}>
+                            {sortMod == SortingMode.Type ? "⏷ Type" : "- Type"}
+                        </button>
+                        <button onClick={() => updateSort(SortingMode.Status)}>
+                            {sortMod == SortingMode.Status ? "⏷ Status" : "- Status"}
+                        </button>
+                    </div>
+                    <div className="events-section">
+                        <p><strong>-- Emergency Reports --</strong></p>
+                        <ul className={showPasswordChange ? 'password-change-shown' : ''}>
+                            {eventsList}
+                        </ul>
+                    </div>
+                </div>
 
-                <p><strong>Sorting Options:</strong></p>
-                <button
-                    onClick={() => updateSort(SortingMode.Time)}>
-                    {sortMod == SortingMode.Time ? "⏷ Time" : "- Time"}
-                </button>
-                <button
-                    onClick={() => updateSort(SortingMode.Region)}>
-                    {sortMod == SortingMode.Region ? "⏷ Region" : "- Region"}
-                </button>
-                <button
-                    onClick={() => updateSort(SortingMode.Type)}>
-                    {sortMod == SortingMode.Type ? "⏷ Type" : "- Type"}
-                </button>
-                <button
-                    onClick={() => updateSort(SortingMode.Status)}>
-                    {sortMod == SortingMode.Status ? "⏷ Status" : "- Status"}
-                </button>
-                <p><strong>-- Emergency Reports --</strong></p>
-
-                <ul>
-                    {eventsList}
-                </ul>
-
-                {/* Add password change section at bottom */}
-                <div className="mt-4 pt-4 border-t border-gray-300">
+                <div className='border-t border-slate-700 pt-4'>
                     {!showPasswordChange ? (
                         <button
                             onClick={() => setShowPasswordChange(true)}
@@ -224,25 +221,25 @@ const Sidebar: React.FC<SidebarProps> = ({ viewableEventList, totalEventList, on
                             Change Operator Password
                         </button>
                     ) : (
-                        <div className="space-y-2">
-                            <input  
+                            <div className={`space-y-2 ${showPasswordChange ? 'pt-2' : ''}`}>
+                            <input
                                 type="password"
                                 placeholder="Current Password"
                                 value={oldPassword}
                                 onChange={(e) => setOldPassword(e.target.value)}
-                                className="w-full px-3 bg-white py-2 border rounded"
+                                className="w-full px-3 bg-white py-2 border border-slate-500 rounded  placeholder-slate-600"
                             />
                             <input
                                 type="password"
                                 placeholder="New Password"
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(e.target.value)}
-                                className="w-full  bg-white px-3 py-2 border rounded"
+                                className="w-full bg-white px-3 py-2 border border-slate-500 rounded placeholder-slate-600"
                             />
                             <div className="flex gap-2">
                                 <button
                                     onClick={handlePasswordChange}
-                                    className="flex-1 px-4 py-2 text-sm bg-blue-500 text-white hover:bg-blue-600 rounded"
+                                    className="flex-1 px-4 py-2 text-sm bg-blue-500 text-white hover:bg-blue-600 placeholder-slate-700 rounded"
                                 >
                                     Update
                                 </button>
@@ -277,7 +274,7 @@ const Sidebar: React.FC<SidebarProps> = ({ viewableEventList, totalEventList, on
                         refreshEventsList(showAll ? totalEventList : viewableEventList);
                     }}
                     onReportRemove={() => setSelectedReport(null)}
-                    onReportEdit={(oldReport, newReport) => {
+                    onReportEdit={(_oldReport, newReport) => {
                         setSelectedReport(newReport);
                         refreshEventsList(showAll ? totalEventList : viewableEventList);
                     }}

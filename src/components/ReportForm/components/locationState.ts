@@ -6,6 +6,7 @@ export let savedLocation: LatLng | null = null;
 
 export const setTempLocation = (location: LatLng): void => {
     tempLocation = location;
+    console.log(tempLocation, "tempLocation");
 }
 
 export const setSavedLocation = (location: LatLng): void => {
