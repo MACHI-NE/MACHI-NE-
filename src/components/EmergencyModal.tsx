@@ -8,13 +8,12 @@ import md5 from "md5";
 interface EmergencyModalProps {
     report: ReportFormData;
     onClose: () => void;
-    onStatusUpdate: (updatedEvent: ReportFormData, newStatus: 'OPEN' | 'RESOLVED') => void;
+    onStatusUpdate: (updatedEvent: ReportFormData, oldEvent: ReportFormData) => void;
     onReportRemove: (reportToRemove: ReportFormData) => void;
     onReportEdit: (oldReport: ReportFormData, newReport: ReportFormData) => void;
 }
 
 export function EmergencyModal({ report, onClose, onStatusUpdate, onReportRemove, onReportEdit }: EmergencyModalProps) {
-    console.log(report)
     const [isAnimatingOut, setIsAnimatingOut] = useState(false);
     const [status, setStatus] = useState<'OPEN' | 'RESOLVED'>(report.status || 'OPEN');
     const [reportFormShowing, setReportFormShowing] = useState(false);
@@ -24,7 +23,7 @@ export function EmergencyModal({ report, onClose, onStatusUpdate, onReportRemove
         const updatedReport: ReportFormData = { ...report, status: newStatus };
         setStatus(newStatus);
         updateReportStatus(report, newStatus);
-        onStatusUpdate(updatedReport, newStatus);
+        onStatusUpdate(updatedReport, report);
     };
 
     // Password functions
