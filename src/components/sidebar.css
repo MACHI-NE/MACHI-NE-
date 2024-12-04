@@ -96,4 +96,8 @@
         margin: 5px;
         padding: 5px;
     }
+
+    .sidebar-component .border-t {
+        padding-top: 0px;
+    }
 }
