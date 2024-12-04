@@ -27,7 +27,7 @@ interface MainMapProps {
   eventReportList: ReportFormData[];
   setVisiblePoints: (visiblePoints: ReportFormData[]) => void;
   selectedCoord: [number, number] | null;
-  setSelectedCoord: (coord: [number,number]| null) => void;
+  setSelectedCoord: (coord: [number, number] | null) => void;
   onReportSelect: (report: ReportFormData) => void;
 }
 
@@ -91,7 +91,7 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
         zoomControl={false}
         className='w-screen h-screen z-0'
       >
-        <ZoomControl position="bottomright"/>
+        <ZoomControl position="topright"/>
         {/* deals with when the map moves, to call setVisiblePoints*/}
         <MapEvents
           eventReportList={eventReportList}
@@ -104,40 +104,42 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         {eventReportList.map((report, index) => report.coordinates ? (
-            <Marker
+          <Marker
             key={index}
             position={report.coordinates}
             icon={(report.coordinates == selectedCoord) ? greenIcon : blueIcon}
             ref={(markerRef) => {
               if (report.coordinates == selectedCoord && markerRef) {
-              markerRef.openPopup();
+                markerRef.openPopup();
               }
             }}
-            eventHandlers={{ 
-              click: () => { 
-              setSelectedCoord(report.coordinates)
+            eventHandlers={{
+              click: () => {
+                setSelectedCoord(report.coordinates)
               },
               popupclose: () => {
-              setSelectedCoord(null)
+                setSelectedCoord(null)
               }
             }}
-            >
-            <Popup 
+          >
+            <Popup
               className='p-0 m-0'
               autoPan={false}
               keepInView={false}
               autoPanPadding={[0, 0]}
-              eventHandlers={{ popupclose: () => {  
-                setSelectedCoord(null)
-            } }}
+              eventHandlers={{
+                popupclose: () => {
+                  setSelectedCoord(null)
+                }
+              }}
             >
               <div className="m-0 p-2 h-full w-full text-black cursor-pointer"
-              onClick={() => onReportSelect(report)}>
-              <h3><b>{report.type === 'Other' ? report.customType : report.type}</b></h3>
-              <p className="text-sm text-gray-600">
-                {new Date(report.time).toLocaleString()} • {report.status}
-              </p>
-              <p className="text-xs text-blue-600 mt-1">Click for more details</p>
+                onClick={() => onReportSelect(report)}>
+                <h3><b>{report.type === 'Other' ? report.customType : report.type}</b></h3>
+                <p className="text-sm text-gray-600">
+                  {new Date(report.time).toLocaleString()} • {report.status}
+                </p>
+                <p className="text-xs text-blue-600 mt-1">Click for more details</p>
               </div>
             </Popup>
           </Marker>
