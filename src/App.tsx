@@ -16,7 +16,7 @@ export default function App() {
   const initVisEvents: ReportFormData[] = []
   const [totEvents, setTotEvents] = useState(totalEvents);
   const [visEvents, setVisEvents] = useState(initVisEvents);
-  const [selectCoord, setSelectCoord] = useState<[number, number] | null>([49.27694889810881, -122.91926811371421]);
+  const [selectCoord, setSelectCoord] = useState<[number, number] | null>(null);
 
   function addReportEvent(newEvent: ReportFormData) {
     setTotEvents((prevTotEvents) => {
