@@ -27,7 +27,7 @@ export function ReportForm({ onClose, onSubmit, report }: ReportFormProps) {
     const [formData, setFormData] = useState<ReportFormData>(report ? {
         ...report,
         // Convert ISO string to local datetime-local format
-        time: report.time ? new Date(report.time).toISOString().slice(0, 16) : ""
+        time: report.time ? new Date(new Date(report.time).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ""
     } : {
         location: "",
         type: "",
