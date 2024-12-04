@@ -78,7 +78,10 @@ const CenterMap: React.FC<{ selectedCoord: [number, number] | null }> = ({ selec
   return null;
 };
 
-
+function arraysEqual(a: [number, number] | null, b: [number, number] | null) {
+  if (a == null || b == null) return false;
+  return a[0] === b[0] && a[1] === b[1];
+}
 
 const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, selectedCoord = null, setSelectedCoord, onReportSelect }) => {
   const defaultPosition: [number, number] = [49.17, -122.94];
@@ -105,11 +108,11 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
         />
         {eventReportList.map((report, index) => report.coordinates ? (
           <Marker
-            key={index}
+            key={`${index}-${arraysEqual(report.coordinates, selectedCoord)}`}
             position={report.coordinates}
-            icon={(report.coordinates == selectedCoord) ? greenIcon : blueIcon}
+            icon={arraysEqual(report.coordinates, selectedCoord) ? greenIcon : blueIcon}
             ref={(markerRef) => {
-              if (report.coordinates == selectedCoord && markerRef) {
+              if (arraysEqual(report.coordinates, selectedCoord) && markerRef) {
                 markerRef.openPopup();
               }
             }}
@@ -127,11 +130,6 @@ const MainMap: React.FC<MainMapProps> = ({ eventReportList, setVisiblePoints, se
               autoPan={false}
               keepInView={false}
               autoPanPadding={[0, 0]}
-              eventHandlers={{
-                popupclose: () => {
-                  setSelectedCoord(null)
-                }
-              }}
             >
               <div className="m-0 p-2 h-full w-full text-black cursor-pointer"
                 onClick={() => onReportSelect(report)}>

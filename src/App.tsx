@@ -51,12 +51,9 @@ export default function App() {
     totalEvents = getReports();
     setTotEvents(totalEvents);
     //update visible
-    console.log("old event:");
-    console.log(oldReport);
     const oldIndex = visEvents.indexOf(oldReport, 0); //get index of old entry in unrefreshed visible events
 
     if (oldIndex > -1) {
-      console.log("vis refreshed");
       visEvents[oldIndex] = updateEvent;
     }
   }
@@ -65,15 +62,14 @@ export default function App() {
     setVisEvents(visEventsList);
   }
   function clickSidebarItem(clickedEvent: ReportFormData) {
-    setSelectedReport(clickedEvent); // display info
-    // highlight on map
-    const newCoords: [number, number] | null = clickedEvent.coordinates;
-    // pass new coords to map
-    setSelectCoord((oldCoords) => {
-      let temp = oldCoords;
-      temp = newCoords;
-      return temp;
-    });
+    setSelectedReport(clickedEvent);
+    // Reset selected coordinate
+    setSelectCoord(null);
+    
+    // Set new coordinates after a short delay
+    setTimeout(() => {
+      setSelectCoord(clickedEvent.coordinates);
+    }, 50); 
   }
 
   function handleReportEdit(oldReport: ReportFormData, newReport: ReportFormData) {
