@@ -71,8 +71,12 @@ export function EmergencyModal({ report, onClose, onStatusUpdate, onReportRemove
         else { setReportFormShowing(true); }
     }
     const onEditSubmit = (newReport: ReportFormData) => {
-        editReport(report, newReport);
-        onReportEdit(report, newReport);
+        const updatedReport = {
+            ...newReport,
+            status: status,
+        };
+        editReport(report, updatedReport);
+        onReportEdit(report, updatedReport);
         handleReportForm();
         alert("Report edited successfully.");
     }
