@@ -194,19 +194,19 @@ const Sidebar: React.FC<SidebarProps> = ({ viewableEventList, totalEventList, on
                     <p><strong>Sorting Options:</strong></p>
                     <button
                         onClick={() => updateSort(SortingMode.Time)}>
-                        {sortMod == SortingMode.Time ? "⏶ Time" : "- Time"}
+                        {sortMod == SortingMode.Time ? "⏷ Time" : "- Time"}
                     </button>
                     <button
                         onClick={() => updateSort(SortingMode.Region)}>
-                        {sortMod == SortingMode.Region ? "⏶ Region" : "- Region"}
+                        {sortMod == SortingMode.Region ? "⏷ Region" : "- Region"}
                     </button>
                     <button
                         onClick={() => updateSort(SortingMode.Type)}>
-                        {sortMod == SortingMode.Type ? "⏶ Type" : "- Type"}
+                        {sortMod == SortingMode.Type ? "⏷ Type" : "- Type"}
                     </button>
                     <button
                         onClick={() => updateSort(SortingMode.Status)}>
-                        {sortMod == SortingMode.Status ? "⏶ Status" : "- Status"}
+                        {sortMod == SortingMode.Status ? "⏷ Status" : "- Status"}
                     </button>
                     <p><strong>-- Emergency Reports --</strong></p>
                     <ul>
@@ -272,8 +272,8 @@ const Sidebar: React.FC<SidebarProps> = ({ viewableEventList, totalEventList, on
                         setSelectedReport(null);
                         refreshEventsList(showAll ? totalEventList : viewableEventList);
                     }}
-                    onStatusUpdate={(updatedReport, newStatus) => {
-                        setSelectedReport({ ...updatedReport, status: newStatus });
+                    onStatusUpdate={(updatedReport, oldReport) => {
+                        setSelectedReport({ ...updatedReport, ...oldReport });
                         refreshEventsList(showAll ? totalEventList : viewableEventList);
                     }}
                     onReportRemove={() => setSelectedReport(null)}
