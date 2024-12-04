@@ -221,7 +221,7 @@ const Sidebar: React.FC<SidebarProps> = ({ viewableEventList, totalEventList, on
                             Change Operator Password
                         </button>
                     ) : (
-                        <div className="space-y-2">
+                            <div className={`space-y-2 ${showPasswordChange ? 'pt-2' : ''}`}>
                             <input
                                 type="password"
                                 placeholder="Current Password"
