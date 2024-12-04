@@ -42,7 +42,11 @@
     margin: 10px;
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: calc(100vh - 440px);
+    max-height: calc(100vh - 330px);
+}
+
+.sidebar-component ul.password-change-shown {
+    max-height: calc(100vh - 410px);
 }
 
 @media (max-width: 768px) {

@@ -206,14 +206,13 @@ const Sidebar: React.FC<SidebarProps> = ({ viewableEventList, totalEventList, on
                     </div>
                     <div className="events-section">
                         <p><strong>-- Emergency Reports --</strong></p>
-                        <ul>
+                        <ul className={showPasswordChange ? 'password-change-shown' : ''}>
                             {eventsList}
                         </ul>
                     </div>
                 </div>
 
-                {/* Add password change section at bottom */}
-                <div>
+                <div className='border-t border-slate-700 pt-4'>
                     {!showPasswordChange ? (
                         <button
                             onClick={() => setShowPasswordChange(true)}
