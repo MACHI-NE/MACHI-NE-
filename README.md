@@ -1,10 +1,10 @@
 ## Contributions
 
-- Marcus - 20%
-- Alex - 20%
-- Coleman - 20%
-- Howard - 20%
-- Isitha - 20%
+- Marcus Ho- 20%
+- Ho Hin (Alex) Mei - 20%
+- Coleman Lai - 20%
+- Howard Jin - 20%
+- Isitha Tennakoon - 20%
 
 ## Design Notes
 
@@ -14,6 +14,7 @@
 - Based on our interpretation of the assignment requirements, an option to toggle the emergencies list between two viewing modes was added:
   - In 'View All' mode, the emergency list shall show all reported emergencies in the map.
   - In 'View Nearby' mode, the emergency list shall show only the emergencies currently corresponding to map markers that are visible within the map's borders.
+- We decided inputting actual coordinates would be too user unfriendly, and the requirements seem to contradict itself on the optional part of inputting them, as how else would we be able to place a marker on the map without coordinates without geocoding (which assumingly is not allowed as it is not part of vanilla Leaflet/Leaflet-React). Because of this, we decided to have the coordinate input be a map input where a user could select the incident location based off of a isolated map.
 
 ## Tester Notes
 
@@ -23,5 +24,5 @@
 
 Please navigate to the MACHI-NE directory and run the following commands from the console:
 
-- npm install
-- npm run dev
+- `npm install`
+- `npm run dev`
