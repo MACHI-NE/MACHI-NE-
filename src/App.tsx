@@ -45,7 +45,7 @@ export default function App() {
   function closeEmergencyModal() {
     setSelectedReport(null);
   }
-  function updateSelectedStatus(updateEvent:ReportFormData, oldReport:ReportFormData) //for updating status from map pin
+  function updateSelectedStatus(updateEvent: ReportFormData, oldReport: ReportFormData) //for updating status from map pin
   {
     //refresh map page
     totalEvents = getReports();
@@ -54,9 +54,8 @@ export default function App() {
     console.log("old event:");
     console.log(oldReport);
     const oldIndex = visEvents.indexOf(oldReport, 0); //get index of old entry in unrefreshed visible events
-   
-    if (oldIndex > -1)
-    {
+
+    if (oldIndex > -1) {
       console.log("vis refreshed");
       visEvents[oldIndex] = updateEvent;
     }

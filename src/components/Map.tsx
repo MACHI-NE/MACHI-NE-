@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MapContainer, ZoomControl, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { ReportFormData } from '../types';
 import { useMap } from 'react-leaflet';
-import { useEffect } from 'react';
 
 const greenIcon = L.icon({
   iconUrl: 'src/components/greenMarker.svg',
@@ -59,6 +58,15 @@ const MapEvents: React.FC<{ eventReportList: ReportFormData[]; setVisiblePoints:
         setVisiblePoints(visiblePoints);
       }
     });
+
+    // Add useEffect to check visible points on mount
+    useEffect(() => {
+      const bounds = map.getBounds();
+      const visiblePoints = eventReportList.filter((report) => {
+        return report.coordinates && bounds.contains(L.latLng(report.coordinates))
+      });
+      setVisiblePoints(visiblePoints);
+    }, [map, eventReportList, setVisiblePoints]);
 
     return null;
   };
