@@ -124,7 +124,6 @@ export function FormInput({
                         <button
                             onClick={() => {
                                 if (tempLocation) {  // Only proceed if tempLocation exists
-                                    console.log(tempLocation);
                                     setShowMap(false);
                                     setIsSaved(true);
                                     setSavedLocation(tempLocation);

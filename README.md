@@ -1,72 +1,27 @@
-# OPTIONAL BUT PREFERABLE CONVENTIONS [FOR THIS PROJECT]
-## Branch Naming
-- `[Branch Type]/[Branch Name]`
-- **Branch types**: Setup, Feature, Docs, Fix
-- **Branch names**: Please name your branches to be concise but descriptive of what the project is doing
-- **Example**: `feature/map-rendering`
-## Branching
-- Limit branches to resolve one issue, if possible
-  - That way merge conflicts will be easier
-  - It's probably not good to have 10000 lines of code changed in a single pull request
-- If your branch does not have an issue, try to create one to link (if applicable, stuff like setup probably doesn't need it)
-## Pull Requests
-- Be descriptive of what the PR does, mentioning issues created/tackles/resolved
-- Use [keywords](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/using-keywords-in-issues-and-pull-requests) to close issues
-- Reviewing's kind of weird with non-Enterprise so I think we can just leave it
-## Commits
-- IDK just do them
-# Issues
-- Add labels where applicable
-- Assign yourself to issues you're tackling
-- Create branches off of issues if possible
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<hr><hr><hr><hr><hr><hr><hr><hr><hr><hr>hi<hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr>
+## Contributions
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Marcus - 20%
+Alex - 20%
+Coleman - 20%
+Howard - 20%
+Isitha - 20%
 
-Currently, two official plugins are available:
+## Design Notes
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- We interpreted 'initially' setting the password as implying the ability to change the password, so a button to reset the operator password was added.
+- When clicking on an item in the emergencies list, the map moves to the position of the corresponding map marker, in addition to displaying all the details. The map marker is highlighted on the map by opening a popup over the map marker, and the colour of the marker will change to green.
+- Our interpretation of a 'sortable' list included the ability to sort by time (latest first), region name (alphabetical), type name (alphabetical), and status (prioritizing the 'OPEN' status)
+- Based on our interpretation of the assignment requirements, an option to toggle the emergencies list between two viewing modes was added:
+  - In 'View All' mode, the emergency list shall show all reported emergencies in the map.
+  - In 'View Nearby' mode, the emergency list shall show only the emergencies currently corresponding to map markers that are visible within the map's borders.
 
-## Expanding the ESLint configuration
+## Tester Notes
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- The operator password is initially set to 'temp'.
 
-- Configure the top-level `parserOptions` property like this:
+## Instructions
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+Please navigate to the MACHI-NE directory and run the following commands from the console:
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+- npm install
+- npm run dev
