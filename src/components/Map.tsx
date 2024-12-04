@@ -36,36 +36,28 @@ interface MainMapProps {
 // function MapEvents takes in List of reports and func for visible points
 const MapEvents: React.FC<{ eventReportList: ReportFormData[]; setVisiblePoints: (visiblePoints: ReportFormData[]) => void }>
   = ({ eventReportList, setVisiblePoints }) => {
+    const initialLoadRef = React.useRef(true);
 
     const map = useMapEvents({
-      // When the view changes
       moveend: () => {
         const bounds = map.getBounds();
         const visiblePoints = eventReportList.filter((report) => {
           return report.coordinates && bounds.contains(L.latLng(report.coordinates))
-        }
-        );
-        setVisiblePoints(visiblePoints);
-      },
-
-      // When the component itself loads
-      load: () => {
-        const bounds = map.getBounds();
-        const visiblePoints = eventReportList.filter((report) => {
-          return report.coordinates && bounds.contains(L.latLng(report.coordinates))
-        }
-        );
+        });
         setVisiblePoints(visiblePoints);
       }
     });
 
-    // Add useEffect to check visible points on mount
     useEffect(() => {
-      const bounds = map.getBounds();
-      const visiblePoints = eventReportList.filter((report) => {
-        return report.coordinates && bounds.contains(L.latLng(report.coordinates))
-      });
-      setVisiblePoints(visiblePoints);
+      // Check if map is ready and we haven't done initial load
+      if (map && initialLoadRef.current) {
+        const bounds = map.getBounds();
+        const visiblePoints = eventReportList.filter((report) => {
+          return report.coordinates && bounds.contains(L.latLng(report.coordinates))
+        });
+        setVisiblePoints(visiblePoints);
+        initialLoadRef.current = false;
+      }
     }, [map, eventReportList, setVisiblePoints]);
 
     return null;
